@@ -5,11 +5,26 @@ Allow about 30 minutes. You only need a browser.
 
 **Before you start**
 - Sign in to your Snowflake account in Snowsight.
-- Set your role to **ACCOUNTADMIN**: bottom-left, click your name or initial > **Switch role** > **ACCOUNTADMIN**.
+- Set your role to **ACCOUNTADMIN**: bottom-left, click your name (for example **ALPHATHIA**) > **Switch role** > **ACCOUNTADMIN**.
 
 > **Why the role matters:** Snowsight uses the role in your **user menu** (bottom-left) to decide what you can
-> see in dialogs such as *Create workspace from Git repository*. If that role isn't ACCOUNTADMIN, the dialog
-> says *"No API integration available"* even after Step 1.
+> see in dialogs such as *Create Git workspace*. If that role isn't ACCOUNTADMIN, the dialog says
+> *"No API integration available"* even after Step 1.
+
+### Do I create a new workspace? (read this first)
+
+Snowsight has two buttons that look alike. Here's which one to use, and when:
+
+| Step | Create a new workspace? | Button to click | Choose |
+| --- | --- | --- | --- |
+| **Step 1** (paste one script) | **No.** Use the **My Workspace** that's already there | **+ Add new** (grey button above the file list) | **SQL File** |
+| **Step 2** (get the course files) | **Yes, exactly one** | **+** (small plus next to the *Workspaces / Databases* tabs) | **Git workspace** |
+| Steps 3 onward | **No.** Use the `gnn_training` workspace from Step 2 | none, just open the files | |
+
+- **Don't** choose *Private workspace* or *Shared workspace* at any point; the course doesn't use them.
+- The `demo.ipynb` file you may see in My Workspace is Snowflake's own sample. Ignore it.
+- If a Snowflake banner or pop-up appears (for example *"Your legacy worksheets have been moved"* or
+  *Automations*), close it with **x** or **Close**. It doesn't affect the course.
 
 ### New to GitHub? You don't need to clone anything
 
@@ -29,14 +44,18 @@ To copy a grey code block on GitHub, hover over it and click the **copy icon** i
 
 ## Step 1 - Connect your account to the course repository (once, copy and paste)
 
-The only step where you copy code by hand.
+The only step where you copy code by hand. **Don't create a new workspace for this step.**
 
-1. Hover over the grey box below and click its **copy icon** (top-right corner of the box).
-2. In Snowsight, go to **Projects > Workspaces**. With **My Workspace** selected, click **+ Add new > SQL File**.
-   Name it `bootstrap.sql`.
-3. Paste into the editor (Ctrl/Cmd + V).
-4. In the editor's context bar, select role **ACCOUNTADMIN**. You can leave the warehouse empty.
-5. Click the arrow next to **Run** > **Run All** (or press Ctrl/Cmd + Shift + Enter).
+1. In the left navigation, click **Workspaces**.
+2. Check that the selector at the top of the file list says **My Workspace**. If it shows another name, click
+   it and choose **My Workspace**.
+3. Click the grey **+ Add new** button (just above the file list), then **SQL File**. Name it `bootstrap.sql`
+   and press Enter. An empty editor tab opens.
+4. On this GitHub page, hover over the grey code box below and click its **copy icon** (top-right corner of the box).
+5. Click inside the empty editor and paste (Ctrl/Cmd + V).
+6. At the top of the editor, click **Choose role** and select **ACCOUNTADMIN**. Leave **Choose warehouse** empty.
+7. Click the small **arrow next to Run** > **Run All** (or press Ctrl/Cmd + Shift + Enter).
+   Don't select any lines first; Run All runs everything.
 
 ```sql
 -- GNN Supply Chain Risk training - Step 1: connect this account to the course on GitHub
@@ -68,7 +87,7 @@ LIST @TRAINING_KIT_REPO.PUBLIC.GNN_KIT/branches/main/data/sap/;
 
 (The same code is also in [`snowsight/00_bootstrap.sql`](snowsight/00_bootstrap.sql), with comments.)
 
-**Checkpoint 1 - you should see:** a result with **4 rows**, ending in
+**Checkpoint 1 - you should see:** in the results pane at the bottom, a table with **4 rows**, ending in
 `s4custom_billofmaterials.csv`, `s4custom_materials.csv`, `s4custom_purchase_orders.csv` and `s4custom_vendors.csv`.
 
 | If you see | Do this |
@@ -79,46 +98,57 @@ LIST @TRAINING_KIT_REPO.PUBLIC.GNN_KIT/branches/main/data/sap/;
 
 ---
 
-## Step 2 - Create your Git workspace
+## Step 2 - Create your Git workspace (the only new workspace you create)
 
 This gives you every course file inside Snowsight, so you never copy code again.
 
-1. Make sure your **user-menu** role (bottom-left) is **ACCOUNTADMIN**.
-2. Go to **Projects > Workspaces**. Click the workspace selector at the top of the file list (it shows
-   **My Workspace**) > **From Git repository**.
-3. Fill in the dialog:
+1. Check your **user-menu** role (bottom-left, under your name) is **ACCOUNTADMIN**. If not: click your name >
+   **Switch role** > **ACCOUNTADMIN**.
+2. In the file panel, find the **Workspaces | Databases** tabs. Click the small **+** to the right of them.
+   (Not the grey *+ Add new* button; that one adds files.)
+3. Under **Create new**, click **Git workspace**. Don't choose *Private workspace* or *Shared workspace*.
+4. Fill in the dialog exactly:
 
    | Field | Enter |
    | --- | --- |
    | Repository URL | `https://github.com/snowflakethia/sap_ws_202611.git` |
-   | Workspace name | `gnn_training` |
-   | API integration | `GNN_KIT_GITHUB` |
+   | Workspace name | `gnn_training` (replace the suggested `sap_ws_202611`) |
+   | API integration | `GNN_KIT_GITHUB` (pick it from the list) |
    | Authentication | **Public repository** |
 
-4. Click **Create**.
+5. Click **Create**. After a few seconds the new workspace opens, with the course folders on the left.
 
 **Checkpoint 2 - you should see:**
-- A workspace named **gnn_training**.
-- The folders `config/`, `data/`, `docs/`, `labs/`, `scripts/`, `snowsight/`, `sql/` and `workspace/`.
+- The selector at the top of the file list says **gnn_training**.
+- The folders `config`, `data`, `docs`, `labs`, `scripts`, `snowsight`, `sql` and `workspace`, plus the
+  `README.md` and `SETUP.md` files.
 
 | If you see | Do this |
 | --- | --- |
 | **No API integration available** | Click **Cancel**. Do Step 1 first, then switch your **user-menu** role to ACCOUNTADMIN and open the dialog again |
 | `GNN_KIT_GITHUB` isn't in the list | Same as above: Step 1 hasn't run, or your user-menu role isn't ACCOUNTADMIN |
-| No **From Git repository** option | Your account uses the older Worksheets UI. Use **Catalog > Database Explorer > TRAINING_KIT_REPO > PUBLIC > Git Repositories > GNN_KIT**, find each file and choose **Copy into worksheet** |
+| I created a *Private* or *Shared* workspace by mistake | Harmless. Ignore it, or delete it from the workspace selector's **...** menu, then do Step 2 again with **Git workspace** |
+| I can't find the small **+** | Hover just right of the *Workspaces / Databases* tabs at the top of the file panel. If the panel is collapsed, click **Workspaces** in the left navigation first |
+| No **Git workspace** option | Your account uses the older Worksheets UI. Use **Catalog > Database Explorer > TRAINING_KIT_REPO > PUBLIC > Git Repositories > GNN_KIT**, find each file and choose **Copy into worksheet** |
 
 You can delete `bootstrap.sql` from **My Workspace** now. You don't need it again.
+
+> **Switching between workspaces:** the selector at the top of the file list switches between **My Workspace**
+> and **gnn_training**. From now on, always make sure it says **gnn_training**.
 
 ---
 
 ## How to run every remaining file
 
-For Steps 3-9, repeat these four actions:
+For Steps 3-9, repeat these five actions:
 
-1. In **gnn_training**, open the folder **snowsight** and click the file.
-2. In the context bar, set the role to **ACCOUNTADMIN**. Leave the warehouse empty; the scripts set their own.
-3. Click **Run All**.
-4. Look at the **last result** (the bottom result tab) and compare it with the checkpoint below.
+1. Make sure the selector at the top of the file list says **gnn_training**.
+2. Click the **snowsight** folder to open it, then click the file (for example `01_stage1_account.sql`).
+   It opens in an editor tab.
+3. At the top of the editor, click **Choose role** > **ACCOUNTADMIN**. Leave the warehouse empty; the scripts
+   set their own.
+4. Click the **arrow next to Run** > **Run All**. Wait until it finishes; a spinner shows while it runs.
+5. In the results pane at the bottom, look at the **last result** and compare it with the checkpoint below.
    Every row in the **RESULT** column must read **PASS**. **INFO** is fine where noted.
 
 If a checkpoint doesn't match, **run the same file again**. Every file is safe to re-run.

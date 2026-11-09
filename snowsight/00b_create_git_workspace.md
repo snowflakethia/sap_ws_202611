@@ -6,9 +6,9 @@
 ## Steps
 
 1. In Snowsight, check that your role is **ACCOUNTADMIN** (your name, lower-left > Switch role).
-2. Go to **Projects > Workspaces**.
-3. Open the workspace menu at the top of the file list (it usually shows **My Workspace**).
-   Under *Create Workspace*, select **From Git repository**.
+2. In the left navigation, click **Workspaces**.
+3. Click the small **+** to the right of the *Workspaces / Databases* tabs (not the grey *+ Add new* button).
+   Under *Create new*, select **Git workspace**. Don't choose *Private workspace* or *Shared workspace*.
 4. Fill in the dialog:
 
    | Field | Value |
@@ -55,4 +55,4 @@ https://app.snowflake.com/<org>/<account>/#/workspaces?action=create_workspace_f
 | **No API integration available** in the dialog | Click **Cancel**. Run `00_bootstrap.sql` first. Then set your **user-menu** role (bottom-left: your name > Switch role) to **ACCOUNTADMIN**; the dialog lists only integrations that role can use. Open the dialog again |
 | `GNN_KIT_GITHUB` is not in the API integration list | Run `00_bootstrap.sql` first, and make sure your role is ACCOUNTADMIN |
 | "Repository not found" | Check the URL: `https://github.com/snowflakethia/sap_ws_202611.git` |
-| No **From Git repository** option | Your account still uses the classic Worksheets UI. Use Catalog > Git Repositories > `GNN_KIT` > *(file)* > **Copy into worksheet** for each file instead |
+| No **Git workspace** option | Your account still uses the classic Worksheets UI. Use Catalog > Git Repositories > `GNN_KIT` > *(file)* > **Copy into worksheet** for each file instead |
