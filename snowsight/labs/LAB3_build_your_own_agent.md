@@ -24,21 +24,36 @@
    **Create agent** button (top-right):
    - Database `DEMO_19865_DB`, schema `GNN_SUPPLY_CHAIN_RISK`
    - Agent object name `MY_SUPPLY_RISK_AGENT`, display name `My Supply Risk Agent`
-   - Click **Create agent**, then open the new agent and click **Edit**.
+   - Click **Create agent**. The new agent's page opens, with the tabs
+     *Overview | Configuration | Access | Evaluations | Observability | Preview*.
 
    *Why:* an agent is a Snowflake object, like a table. It lives in a schema, has an owner, and can be granted
    to other roles.
 
-3. **Add tool 1: Cortex Analyst** (**Tools > Cortex Analyst > + Add**):
+   > **Where you'll work for steps 3 to 6: this agent's Configuration tab.**
+   > Tools are added **inside the agent**, not from the AI menu. The **AI > Analyst** page (titled *Cortex
+   > Analyst*, with "Select database to see semantic views") and the **AI > Search** page are for browsing
+   > semantic views and search services. You can't add tools to an agent there.
+   > If you've lost the agent page: **AI > Agent Studio** > **Agents** tab > click **MY_SUPPLY_RISK_AGENT** >
+   > **Configuration** tab.
+
+3. **Add tool 1: Cortex Analyst.** On the **Configuration** tab, find the **Tools** section. Next to
+   **Cortex Analyst**, click **+ Add**, then fill in:
 
    | Field | Value | What it means |
    | --- | --- | --- |
-   | Semantic view | `DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.SUPPLY_CHAIN_RISK_SEMANTIC_VIEW` | The business layer the agent writes SQL against |
+   | Semantic view | `DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.SUPPLY_CHAIN_RISK_SEMANTIC_VIEW` | The business layer the agent writes SQL against. Pick database, then schema, then the view |
    | Warehouse | `DEMO_19865_WH` | The compute that runs the generated SQL |
    | Name | `GNN_SUPPLY_CHAIN_RISK_AGENT` | How the agent refers to this tool internally |
    | Description | `This dataset focuses on supply chain risk management` | **The agent reads this to decide when to use the tool**, so write it for the LLM, not for people |
 
-4. **Add tool 2: Cortex Search** (**Tools > Cortex Search Services > + Add**):
+   Click **Add** to close the dialog. The tool now appears under **Tools**.
+
+   *Remember Lab 2:* this description is what the agent sees in **Available Tools** in its trace. We're
+   deliberately keeping it vague.
+
+4. **Add tool 2: Cortex Search.** Still in the **Tools** section, next to **Cortex Search Services**, click
+   **+ Add**, then fill in:
 
    | Field | Value | What it means |
    | --- | --- | --- |
@@ -46,15 +61,19 @@
    | ID column | `CONTRACT_ID` | Lets the agent cite *which* contract a passage came from |
    | Title column | `CONTRACT_TITLE` | A readable label for each citation |
    | Name | `GNN_CONTRACT_SEARCH_SERVICE` | Internal tool name |
+   | Description | `Contract search service analyzing contract details using CONTRACT_TEXT attribute (unstructured data)` | Tells the agent this tool is for contract *text* |
 
-5. **Orchestration:** leave the model on **auto** (Snowflake picks a suitable model). Under **response
-   instructions**, enter:
+   Click **Add**. You should now see **2 tools** under **Tools**.
+
+5. **Orchestration** (same **Configuration** tab, further down): leave the model on **auto** (Snowflake picks a
+   suitable model). Under **response instructions**, enter:
    `Answer briefly. Show supplier comparisons as a table.`
    **Leave the orchestration instructions empty.** That's the experiment.
    *Why:* response instructions control **how answers look**. Orchestration instructions control **which tool to
    use, when, and in what order**. The main agent has both; yours has only the first.
 
-6. Click **Save**.
+6. Click **Save** (top-right). When the button turns grey and reads **Saved**, your changes are stored. You don't
+   need **Publish** or **Add to Snowflake CoWork** for this lab.
 
 7. **Run the experiment.** Open each agent's **Preview** tab (AI > Agent Studio > click the agent > **Preview**). Ask your agent these two questions from Lab 2, then ask `GNN_SUPPLY_RISK_AGENT` the
    same ones and compare:
