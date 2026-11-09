@@ -28,8 +28,8 @@ install anything.
 ## Part 1 - Setup
 
 ### Step 0 - Connect Snowflake to the course repository (copy and paste, once)
-1. On GitHub, open [`snowsight/00_bootstrap.sql`](00_bootstrap.sql) and select **Copy raw file**
-   (the copy icon above the file).
+1. In a new browser tab, open the plain-text file [https://raw.githubusercontent.com/snowflakethia/sap_ws_202611/main/snowsight/00_bootstrap.sql](https://raw.githubusercontent.com/snowflakethia/sap_ws_202611/main/snowsight/00_bootstrap.sql).
+   Click on the page, press **Ctrl/Cmd + A** (select all), then **Ctrl/Cmd + C** (copy).
 2. In Snowsight, click **Workspaces** in the left navigation. **Don't create a new workspace**: with **My Workspace** selected, click the grey **+ Add new** > **SQL File**.
    Paste the file, set the role to **ACCOUNTADMIN**, then select **Run All**.
 

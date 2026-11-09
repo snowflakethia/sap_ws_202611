@@ -38,7 +38,7 @@ GitHub for you:
 | "Sign in to GitHub" | **Not needed.** The course repository is public |
 
 The only thing you take from GitHub is **one block of text** in Step 1, and it's on this page.
-To copy a grey code block on GitHub, hover over it and click the **copy icon** in its top-right corner.
+Step 1 explains exactly how to copy it, including a plain-text link that works on any device.
 
 ---
 
@@ -46,13 +46,32 @@ To copy a grey code block on GitHub, hover over it and click the **copy icon** i
 
 The only step where you copy code by hand. **Don't create a new workspace for this step.**
 
+> **You'll use two browser tabs:**
+> - **Tab A - GitHub:** this page, where you copy the code.
+> - **Tab B - Snowsight:** where you paste and run it.
+>
+> The copy instructions below happen in **Tab A (GitHub)**, not in Snowsight.
+
+**In Tab B (Snowsight): open an empty SQL file**
 1. In the left navigation, click **Workspaces**.
 2. Check that the selector at the top of the file list says **My Workspace**. If it shows another name, click
    it and choose **My Workspace**.
 3. Click the grey **+ Add new** button (just above the file list), then **SQL File**. Name it `bootstrap.sql`
    and press Enter. An empty editor tab opens.
-4. On this GitHub page, hover over the grey code box below and click its **copy icon** (top-right corner of the box).
-5. Click inside the empty editor and paste (Ctrl/Cmd + V).
+
+**In Tab A (GitHub): copy the code, using either option**
+4. **Option 1 (easiest, works everywhere):** open this link in a new tab:
+   **[raw.githubusercontent.com/.../00_bootstrap.sql](https://raw.githubusercontent.com/snowflakethia/sap_ws_202611/main/snowsight/00_bootstrap.sql)**.
+   The page shows only plain text. Click anywhere on it, press **Ctrl + A** (Mac: **Cmd + A**) to select
+   everything, then **Ctrl + C** (Mac: **Cmd + C**) to copy.
+
+   **Option 2:** scroll down to the grey code box on this page. Move your mouse over the box. A small
+   **copy button** (two overlapping squares) appears in the box's **top-right corner**. Click it; it briefly
+   shows a tick. If you don't see the button (for example on a tablet or a narrow window), use Option 1.
+
+**Back in Tab B (Snowsight): paste and run**
+5. Click inside the empty `bootstrap.sql` editor and paste: **Ctrl + V** (Mac: **Cmd + V**). You should see about
+   40 lines, starting with `-- ====` or `-- GNN Supply Chain Risk training`.
 6. At the top of the editor, click **Choose role** and select **ACCOUNTADMIN**. Leave **Choose warehouse** empty.
 7. Click the small **arrow next to Run** > **Run All** (or press Ctrl/Cmd + Shift + Enter).
    Don't select any lines first; Run All runs everything.

@@ -2,7 +2,8 @@
 -- STEP 0 - Bootstrap: connect this Snowflake account to the training GitHub repo
 -- =============================================================================
 -- HOW TO RUN (the only file you copy by hand):
---   1. In GitHub, open snowsight/00_bootstrap.sql and click "Copy raw file".
+--   1. In a browser tab, open https://raw.githubusercontent.com/snowflakethia/sap_ws_202611/main/snowsight/00_bootstrap.sql
+--      then press Ctrl/Cmd + A (select all) and Ctrl/Cmd + C (copy).
 --   2. In Snowsight: Projects > Workspaces > + Add new > SQL File, paste, then Run All.
 --      (Classic UI: Projects > Worksheets > + > SQL Worksheet.)
 --   3. Role: ACCOUNTADMIN. No warehouse is needed.
