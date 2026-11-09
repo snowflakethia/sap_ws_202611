@@ -106,7 +106,7 @@ The full, click-by-click guide with every checkpoint is in **[SETUP.md](SETUP.md
 | **3. Demo schema** | `snowsight/03_stage3_demo_schema.sql`, **Run All** | 6 tables, 4 views, PASS |
 | **4. Demo data** | `snowsight/04_stage4_demo_data.sql`, **Run All** | 648 rows, risk summary `50/2/4/0.4060`, PASS |
 | **5. Search + semantic view** | `snowsight/05_stage5_search_semantic_view.sql`, **Run All** (waits for the index) | Search `ACTIVE/ACTIVE`, PASS |
-| **6. Agent** | `snowsight/06_stage6_agent.sql`, **Run All**. Then in **AI > Agent Studio**, open **GNN_SUPPLY_RISK_AGENT** and ask *"Which suppliers are CRITICAL risk?"* | PASS, and the answer names **Albemarle Corp** and **Epsilon Tech** |
+| **6. Agent** | `snowsight/06_stage6_agent.sql`, **Run All**. Then in **AI > Agent Studio**, open **GNN_SUPPLY_RISK_AGENT** > **Preview** tab and ask *"Which suppliers are CRITICAL risk?"* | PASS, and the answer names **Albemarle Corp** and **Epsilon Tech** |
 | **Ready?** | `snowsight/08_readiness_check.sql`, **Run All** | **`OVERALL = READY`** |
 
 **Every file is safe to re-run.** If a checkpoint doesn't match, run the same file again. If the

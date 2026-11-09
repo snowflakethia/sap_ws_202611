@@ -202,7 +202,7 @@ Creates the Cortex Agent. Under 1 minute.
 - instructions `true/true`
 
 **Checkpoint 8b (in the UI):**
-1. In the left navigation, hover over **AI** > **Agent Studio**. On the **Agents** tab, click **GNN_SUPPLY_RISK_AGENT**.
+1. In the left navigation, hover over **AI** > **Agent Studio**. On the **Agents** tab, click **GNN_SUPPLY_RISK_AGENT**, then click the **Preview** tab. Ask your questions there.
 2. Ask: **Which suppliers are CRITICAL risk?**
 3. You should see **Albemarle Corp** and **Epsilon Tech** (both AUS, GNN risk score about 0.61).
 

@@ -34,12 +34,16 @@
 2. In the left navigation, hover over **AI** and click **Agent Studio**.
 3. Stay on the **Agents** tab. You should see one row: **GNN_SUPPLY_RISK_AGENT**, last updated by
    `DEMO_19865_ROLE`, with **ADDED TO COWORK = No**.
-4. Click **GNN_SUPPLY_RISK_AGENT** to open it, and type your questions in the agent's chat box.
+4. Click **GNN_SUPPLY_RISK_AGENT**. The agent page opens on the **Overview** tab (usage charts, no chat box).
+5. **Click the Preview tab** (the last tab in the row *Overview | Configuration | Access | Evaluations |
+   Observability | Preview*). **This is where you ask your questions:** type in the message box and press Enter.
+
+   > **Don't click Publish or Add to Snowflake CoWork.** Preview lets you chat with the agent without changing it.
 
    > **Why not Snowflake CoWork?** The *Snowflake CoWork* link in the same AI menu opens Snowflake's chat app,
    > which only shows agents that have been **added to CoWork**. This agent hasn't been (the column says *No*),
    > so use Agent Studio for these labs.
-5. Ask each question below **exactly as written**. After each answer, expand the response details (the steps
+6. In the Preview tab, ask each question below **exactly as written**. After each answer, expand the response details (the steps
    shown above or under the answer). Look for the **tool name**, plus the **SQL** (analyst) or the
    **contract passages** (search).
 

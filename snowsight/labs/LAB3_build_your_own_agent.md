@@ -56,7 +56,7 @@
 
 6. Click **Save**.
 
-7. **Run the experiment.** Ask your agent these two questions from Lab 2, then ask `GNN_SUPPLY_RISK_AGENT` the
+7. **Run the experiment.** Open each agent's **Preview** tab (AI > Agent Studio > click the agent > **Preview**). Ask your agent these two questions from Lab 2, then ask `GNN_SUPPLY_RISK_AGENT` the
    same ones and compare:
    - *Which suppliers are CRITICAL risk?*
    - *Which external suppliers have the strongest predicted hidden links to our suppliers, and what do our
