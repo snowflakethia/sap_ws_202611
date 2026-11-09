@@ -53,7 +53,20 @@
    you saw in Lab 2's traces). More options mean more ways for the agent to pick the wrong one.
 
 4. **Add tool 1: Cortex Analyst.** Scroll down to **Query structured data** (*"Add semantic views to query data
-   using natural language"*) and click **+ Add semantic view** on the right. Fill in:
+   using natural language"*) and click **+ Add semantic view** on the right.
+
+   > **Can't find "Cortex Analyst" on the page?** That's expected. The Tools page uses plain-language labels
+   > instead of product names:
+   >
+   > | On the Tools page | Product name (used in Lab 2 and in the traces) |
+   > | --- | --- |
+   > | **Query structured data** | **Cortex Analyst** (text-to-SQL over a semantic view) |
+   > | **Search documents and unstructured data** | **Cortex Search** |
+   >
+   > Adding a semantic view here *is* adding a Cortex Analyst tool. That's why the trace's SQL Execution step shows
+   > **Analyst Tool Name for Semantic Model**.
+
+   Fill in:
 
    | Field | Value | What it means |
    | --- | --- | --- |
@@ -62,14 +75,18 @@
    | Name | `GNN_SUPPLY_CHAIN_RISK_AGENT` | How the agent refers to this tool internally |
    | Description | `This dataset focuses on supply chain risk management` | **The agent reads this to decide when to use the tool**, so write it for the LLM, not for people |
 
-   Confirm the dialog. The semantic view now appears under **Query structured data**.
+   Confirm the dialog. A grey card now appears under **Query structured data**, showing:
+   - the name **GNN_SUPPLY_CHAIN_RISK_AGENT** (with a pencil icon to edit and an **x** to remove);
+   - **Semantic view** `DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.SUPPLY_CHAIN_RISK_SEMANTIC_VIEW`;
+   - **Warehouse** `DEMO_19865_WH`;
+   - your description, *This dataset focuses on supply chain risk management*.
 
    *Remember Lab 2:* this description is what the agent sees in **Available Tools** in its trace. We're
    deliberately keeping it vague. Compare it with the main agent's: *"Query supply chain risk data including
    supplier risk scores, network analysis, and risk factors"*.
 
-5. **Add tool 2: Cortex Search.** Just below, in **Search documents and unstructured data** (*"Add Cortex Search
-   services to power chat experiences"*), click **+ Add search service** on the right. Fill in:
+5. **Add tool 2: Cortex Search** (on the page: **Search documents and unstructured data**, *"Add Cortex Search
+   services to power chat experiences"*). Click **+ Add search service** on the right. Fill in:
 
    | Field | Value | What it means |
    | --- | --- | --- |
@@ -79,13 +96,15 @@
    | Name | `GNN_CONTRACT_SEARCH_SERVICE` | Internal tool name |
    | Description | `Contract search service analyzing contract details using CONTRACT_TEXT attribute (unstructured data)` | Tells the agent this tool is for contract *text* |
 
-   Confirm the dialog. The service now appears under **Search documents and unstructured data**.
+   Confirm the dialog. A second grey card appears under **Search documents and unstructured data**.
 
    Leave **Custom tools** (the last section) empty. Custom tools let an agent call your own functions or
    procedures; this lab doesn't need any.
 
-   **Check before moving on:** Web search off, Analytical search off, Code Execution tool off, **1 semantic view**
-   and **1 search service** added.
+   **Check before moving on:** scroll back to the top of the Tools sub-tab.
+   - **Code Execution tool** switch is **off** (grey). It's easy to miss because it's on by default.
+   - Web search and Analytical search are off.
+   - **1 card** under *Query structured data* and **1 card** under *Search documents and unstructured data*.
 
 6. **Instructions:** click the **Instructions** sub-tab. Under **response instructions**, enter:
    `Answer briefly. Show supplier comparisons as a table.`
@@ -94,8 +113,11 @@
    *Why:* response instructions control **how answers look**. Orchestration instructions control **which tool to
    use, when, and in what order**. The main agent has both; yours has only the first.
 
-7. Click **Save** (top-right). When the button turns grey and reads **Saved**, your changes are stored. You don't
-   need **Publish** or **Add to Snowflake CoWork** for this lab.
+7. **Save.** While you edit, the header shows **Draft** next to the agent name, a red dot with **Unsaved changes**,
+   and a blue **Save** button (top-right). Click **Save**. When the button turns grey and reads **Saved**, your
+   changes are stored. You don't need **Publish** or **Add to Snowflake CoWork** for this lab.
+
+   > **Don't skip this.** Save first, so the Preview tab tests the configuration you just built.
 
 8. **Run the experiment.** Open each agent's **Preview** tab (AI > Agent Studio > click the agent > **Preview**). Ask your agent these two questions from Lab 2, then ask `GNN_SUPPLY_RISK_AGENT` the
    same ones and compare:
