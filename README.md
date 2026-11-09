@@ -99,7 +99,7 @@ The full, click-by-click guide with every checkpoint is in **[SETUP.md](SETUP.md
 
 | Step | Do this in Snowsight | You should see |
 | --- | --- | --- |
-| **0. Connect to this repo** | Copy [`snowsight/00_bootstrap.sql`](snowsight/00_bootstrap.sql) (*Copy raw file*). In **Projects > Workspaces > + Add new > SQL File**, paste it, set role **ACCOUNTADMIN**, then **Run All** | 4 SAP CSV files listed |
+| **0. Connect to this repo** | **Don't create a new workspace.** In **Workspaces** (left navigation), with **My Workspace** selected, click **+ Add new > SQL File**. Paste the code block from [SETUP.md Step 1](SETUP.md#step-1---connect-your-account-to-the-course-repository-once-copy-and-paste), set role **ACCOUNTADMIN**, then **Run All** | 4 SAP CSV files listed |
 | **0b. Create your Git workspace** | Set your **user-menu** role (bottom-left) to **ACCOUNTADMIN**. Then, in **Workspaces**, click the small **+** next to the *Workspaces / Databases* tabs > **Git workspace** (not *Private* or *Shared*). Use URL `https://github.com/snowflakethia/sap_ws_202611.git`, name `gnn_training`, API integration `GNN_KIT_GITHUB`, authentication **Public repository** ([details](snowsight/00b_create_git_workspace.md)) | Folders `snowsight/`, `sql/`, `data/`, `labs/`. If you see *No API integration available*, step 0 hasn't run or your role isn't ACCOUNTADMIN |
 | **1. Account objects** | In `gnn_training`, open `snowsight/01_stage1_account.sql` and **Run All** | All rows PASS (INFO is fine on trial accounts) |
 | **2. SAP data products** | `snowsight/02_stage2_sap_data.sql`, **Run All** | 219 SAP rows, PASS |
@@ -129,7 +129,7 @@ readiness check says NOT READY, it tells you which file to re-run.
 
 When you're done:
 1. Open `snowsight/99_remove_setup.sql` and select **Run All**. Every row should read **REMOVED**.
-2. Delete the `gnn_training` workspace: **Projects > Workspaces > ... > Delete**.
+2. Delete the `gnn_training` workspace: **Workspaces** (left navigation) > workspace selector > **...** next to `gnn_training` > **Delete**.
 
 Only what this lab created is removed.
 

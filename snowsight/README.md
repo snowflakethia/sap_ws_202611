@@ -30,7 +30,7 @@ install anything.
 ### Step 0 - Connect Snowflake to the course repository (copy and paste, once)
 1. On GitHub, open [`snowsight/00_bootstrap.sql`](00_bootstrap.sql) and select **Copy raw file**
    (the copy icon above the file).
-2. In Snowsight, go to **Projects > Workspaces** and select **+ Add new > SQL File**.
+2. In Snowsight, click **Workspaces** in the left navigation. **Don't create a new workspace**: with **My Workspace** selected, click the grey **+ Add new** > **SQL File**.
    Paste the file, set the role to **ACCOUNTADMIN**, then select **Run All**.
 
 **CHECKPOINT 0 - expected last result:** 4 rows listing
@@ -127,7 +127,7 @@ the readiness check again.
 ## Part 3 - Remove the setup (when the course is over)
 1. Open `snowsight/99_remove_setup.sql` in `gnn_training`, then select **Run All** with role ACCOUNTADMIN.
    **Expected last result:** 6 rows, every RESULT = **REMOVED**.
-2. Delete the workspace: **Projects > Workspaces**, open the workspace menu, select the **...** next to
+2. Delete the workspace: **Workspaces** (left navigation), open the workspace menu, select the **...** next to
    `gnn_training` > **Delete**.
 
 This removes only what the course created. Nothing else in your account is touched.

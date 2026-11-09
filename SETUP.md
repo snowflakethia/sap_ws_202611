@@ -237,7 +237,7 @@ Then run Step 9 again.
 ## When the course is over - remove everything
 1. In **gnn_training**, open `snowsight/99_remove_setup.sql`, set role **ACCOUNTADMIN**, then **Run All**.
    Expected: **6 rows**, every RESULT = **REMOVED**.
-2. Delete the workspace: **Projects > Workspaces**, open the workspace selector, click **...** next to
+2. Delete the workspace: **Workspaces** (left navigation), open the workspace selector, click **...** next to
    **gnn_training** > **Delete**.
 
 ## Quick help
