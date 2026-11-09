@@ -59,15 +59,23 @@ The only step where you copy code by hand. **Don't create a new workspace for th
 3. Click the grey **+ Add new** button (just above the file list), then **SQL File**. Name it `bootstrap.sql`
    and press Enter. An empty editor tab opens.
 
-**In Tab A (GitHub): copy the code, using either option**
-4. **Option 1 (easiest, works everywhere):** open this link in a new tab:
-   **[raw.githubusercontent.com/.../00_bootstrap.sql](https://raw.githubusercontent.com/snowflakethia/sap_ws_202611/main/snowsight/00_bootstrap.sql)**.
-   The page shows only plain text. Click anywhere on it, press **Ctrl + A** (Mac: **Cmd + A**) to select
-   everything, then **Ctrl + C** (Mac: **Cmd + C**) to copy.
+**In Tab A (GitHub): copy the code, using ONE of these options**
 
-   **Option 2:** scroll down to the grey code box on this page. Move your mouse over the box. A small
-   **copy button** (two overlapping squares) appears in the box's **top-right corner**. Click it; it briefly
-   shows a tick. If you don't see the button (for example on a tablet or a narrow window), use Option 1.
+4. **Option 1 - plain-text page (easiest):**
+   1. Open this address in a new browser tab (click it, or copy it into the address bar):
+      **https://raw.githubusercontent.com/snowflakethia/sap_ws_202611/main/snowsight/00_bootstrap.sql**
+   2. The page shows **only the code**, as plain text with no GitHub menus. Its first line starts with `-- ====`.
+   3. Click anywhere on that text, press **Ctrl + A** (Mac: **Cmd + A**) to select all of it, then **Ctrl + C**
+      (Mac: **Cmd + C**) to copy.
+
+   **Option 2 - GitHub file page:**
+   1. Open **https://github.com/snowflakethia/sap_ws_202611/blob/main/snowsight/00_bootstrap.sql**
+   2. Above the code, on the right of the grey bar that shows the file size, click the **Copy raw file**
+      button (two overlapping squares). It briefly shows a tick.
+   3. Don't use Ctrl + A on this page. That selects the whole web page, not just the code.
+
+   **Option 3 - this page:** scroll down to the grey code box below and hover over it. A **copy** button (two
+   overlapping squares) appears in the box's top-right corner. Click it.
 
 **Back in Tab B (Snowsight): paste and run**
 5. Click inside the empty `bootstrap.sql` editor and paste: **Ctrl + V** (Mac: **Cmd + V**). You should see about
