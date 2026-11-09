@@ -14,7 +14,7 @@ is not part of this repository.
 | Network rule `PIP_INSTALLATION` + EAI `DEMO_19865_PIP_INSTALLATION` | `12_network_rule_pypi.sql`, `12b_eai_pypi.sql` | Plain DDL instead of `EXECUTE IMMEDIATE`. The integration is **best effort**, because trial accounts reject external access |
 | 4 SAP catalog-linked databases `S4_Z*_DP_DELTA_SHARING_V1` (Iceberg tables over SAP BDC) | `stage2_sap_snapshot/*` + `data/sap/*.csv` | **Snapshot** as standard tables, with the same names |
 | `TRADE_DATA_EXTERNAL`, `REGIONS_EXTERNAL`, `CUSTOMER_CONTRACTS`, `RISK_SCORES_PREDICTIONS`, `BOTTLENECKS_PREDICTIONS` | `stage3_demo_schema/32_tables.sql` | `CUSTOMER_CONTRACTS` gets `CHANGE_TRACKING = TRUE` (for the search service) |
-| `SUPPLIER_LINKS_PREDICTIONS` | `32_tables.sql` | **Standard** table; the source is Snowflake-managed Iceberg v3. Same columns and types |
+| `SUPPLIER_LINKS_PREDICTIONS` | `32_tables.sql` | **Standard** table; the source is Snowflake-managed Iceberg v3. Same columns and types; `LINK_ID` is `AUTOINCREMENT` so the GNN notebook can append rows |
 | 4 views `VW_*` | `33_views.sql` | Demo table names fully qualified; logic unchanged |
 | Stages `DATA_STAGE`, `MODELS_STAGE`, `DEMO_SECRETS_STAGE`; `CSV_FORMAT` | `31_stages_file_format.sql` | `DEMO_SECRETS_STAGE` ships **empty** |
 | `CONTRACT_SEARCH_SERVICE` | `stage5_ai_services/50_cortex_search.sql` | None |

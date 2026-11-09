@@ -3,6 +3,8 @@
 -- Source: GET_DDL on F9A3UBGT (authoritative; differs slightly from 02_schema_setup.sql)
 -- Difference from source: SUPPLIER_LINKS_PREDICTIONS is a Snowflake-managed ICEBERG
 -- table in F9A3UBGT. It is created as a STANDARD table here, with the same columns and types.
+-- LINK_ID also gets AUTOINCREMENT (as in 02_schema_setup.sql): the GNN notebook appends rows
+-- without LINK_ID. Loaded IDs are 1-381; new IDs start at 100000.
 -- =============================================================================
 USE ROLE DEMO_19865_ROLE;
 USE WAREHOUSE DEMO_19865_WH;
@@ -66,7 +68,7 @@ CREATE TABLE IF NOT EXISTS RISK_SCORES_PREDICTIONS (
 ) COMMENT = 'GNN-computed risk scores for all supply chain nodes';
 
 CREATE TABLE IF NOT EXISTS SUPPLIER_LINKS_PREDICTIONS (
-    LINK_ID           NUMBER(10,0) NOT NULL,
+    LINK_ID           NUMBER(10,0) NOT NULL AUTOINCREMENT START 100000 INCREMENT 1 NOORDER,  -- generated for notebook inserts (lab 4)
     SOURCE_NODE_ID    VARCHAR,
     SOURCE_NODE_TYPE  VARCHAR,
     TARGET_NODE_ID    VARCHAR,
