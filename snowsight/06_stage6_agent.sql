@@ -10,7 +10,7 @@
 --   S6-B search tool -> service / max_results     ...CONTRACT_SEARCH_SERVICE / 4
 --   S6-B instructions present                     true/true
 -- CHECKPOINT 5, part 2 (in the UI - see snowsight/README.md):
---   AI & ML > Agents > GNN_SUPPLY_RISK_AGENT, ask "Which suppliers are CRITICAL risk?"
+--   AI > Agent Studio > Agents tab > GNN_SUPPLY_RISK_AGENT, ask "Which suppliers are CRITICAL risk?"
 --   Expected: Albemarle Corp and Epsilon Tech (both AUS, GNN risk score about 0.61).
 -- =============================================================================
 USE ROLE ACCOUNTADMIN;

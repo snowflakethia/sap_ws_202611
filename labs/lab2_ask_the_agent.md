@@ -2,7 +2,7 @@
 
 **Goal:** use `GNN_SUPPLY_RISK_AGENT`, which combines structured risk data (Cortex Analyst over the
 semantic view) with unstructured contracts (Cortex Search).
-**Time:** 20 minutes. **Where:** Snowsight > AI & ML > Agents > `GNN_SUPPLY_RISK_AGENT` (or Snowflake Intelligence).
+**Time:** 20 minutes. **Where:** Snowsight > AI > Agent Studio > Agents tab > `GNN_SUPPLY_RISK_AGENT`.
 
 ## Questions to ask
 

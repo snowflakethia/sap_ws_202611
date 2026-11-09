@@ -31,9 +31,15 @@
 
 ## Open the agent
 1. Make sure your user-menu role (bottom-left) is **ACCOUNTADMIN**.
-2. In the left navigation, open **AI & ML > Agents** (in some accounts: **AI > Agents**), then click
-   **GNN_SUPPLY_RISK_AGENT**.
-3. Ask each question below **exactly as written**. After each answer, expand the response details (the steps
+2. In the left navigation, hover over **AI** and click **Agent Studio**.
+3. Stay on the **Agents** tab. You should see one row: **GNN_SUPPLY_RISK_AGENT**, last updated by
+   `DEMO_19865_ROLE`, with **ADDED TO COWORK = No**.
+4. Click **GNN_SUPPLY_RISK_AGENT** to open it, and type your questions in the agent's chat box.
+
+   > **Why not Snowflake CoWork?** The *Snowflake CoWork* link in the same AI menu opens Snowflake's chat app,
+   > which only shows agents that have been **added to CoWork**. This agent hasn't been (the column says *No*),
+   > so use Agent Studio for these labs.
+5. Ask each question below **exactly as written**. After each answer, expand the response details (the steps
    shown above or under the answer). Look for the **tool name**, plus the **SQL** (analyst) or the
    **contract passages** (search).
 

@@ -1,7 +1,7 @@
 # Lab 3 - Build your own agent
 
 **Goal:** create an agent yourself in Snowsight, using the same semantic view and search service.
-**Time:** 20 minutes. **Where:** Snowsight > AI & ML > Agents > **Create agent**.
+**Time:** 20 minutes. **Where:** Snowsight > AI > Agent Studio > **Create agent** (top-right).
 
 In the original environment each trainee built a copy named `GNN_SUPPLY_RISK_AGENT_<userid>`.
 You have your own account, so call yours `MY_SUPPLY_RISK_AGENT`.

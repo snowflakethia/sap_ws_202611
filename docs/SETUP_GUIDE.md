@@ -51,7 +51,7 @@ Differences from F9A3UBGT are listed in [SOURCE_INVENTORY.md](SOURCE_INVENTORY.m
 | # | Requirement | How to check |
 | --- | --- | --- |
 | 1 | A Snowflake account for the trainee, with a user that has **ACCOUNTADMIN** | Log in to Snowsight; the role selector shows ACCOUNTADMIN |
-| 2 | Region supports **Cortex Agents, Cortex Search and Cortex Analyst** | Snowsight > AI & ML shows Agents and Cortex Search |
+| 2 | Region supports **Cortex Agents, Cortex Search and Cortex Analyst** | Snowsight > AI menu shows **Agent Studio** and **Search** |
 | 3 | **Snowflake CLI** (`snow`) 3.x on the machine that runs the kit | `snow --version` |
 | 4 | **Python 3** (used by `deploy.sh` to read one JSON value) | `python3 --version` |
 | 5 | A CLI connection to the trainee account | `snow connection add`, then `snow connection test -c <name>` |
@@ -159,7 +159,7 @@ used by Cortex Analyst. It waits up to about 5 minutes for the search index to b
 | --- | --- | --- |
 | A | Rows `S5-A` | Search service = `CONTRACT_TEXT ACTIVE/ACTIVE` -> PASS (if it shows `WAIT`, re-run `validate.sh --stage 5` after a minute). Semantic view = `1` -> PASS |
 | B | Row `S5-B` | Search for "force majeure" returns **1-3 results** with a CONTRACT_ID -> PASS |
-| C | Rows `S5-C`, then in Snowsight go to AI & ML > Cortex Analyst > `SUPPLY_CHAIN_RISK_SEMANTIC_VIEW` | Structure = `4 tables, 9 facts, 26 dimensions` -> PASS. Semantic view query = `50 rows: CRITICAL 2, HIGH 4, MEDIUM 44` -> PASS. Snowsight lists **2 verified queries** |
+| C | Rows `S5-C`, then in Snowsight go to AI > Analyst > `SUPPLY_CHAIN_RISK_SEMANTIC_VIEW` | Structure = `4 tables, 9 facts, 26 dimensions` -> PASS. Semantic view query = `50 rows: CRITICAL 2, HIGH 4, MEDIUM 44` -> PASS. Snowsight lists **2 verified queries** |
 
 ### Stage 6 - Agent
 **What it does:** creates `GNN_SUPPLY_RISK_AGENT` from the specification of the agent in F9A3UBGT
@@ -170,7 +170,7 @@ used by Cortex Analyst. It waits up to about 5 minutes for the search index to b
 | --- | --- | --- |
 | A | Row `S6-A` | `1:GNN_SUPPLY_RISK_AGENT`: exactly one agent, with no `_AC...` or `_PA...` copies -> PASS |
 | B | Rows `S6-B` | Tools = `supply_chain_risk_analyst,contract_search`. The analyst tool points to the semantic view on `DEMO_19865_WH`. The search tool points to `CONTRACT_SEARCH_SERVICE` with max results `4`. Instructions = `true/true`. All PASS |
-| C | Snowsight > AI & ML > Agents > `GNN_SUPPLY_RISK_AGENT`. Ask: **"Which suppliers are CRITICAL risk?"** then **"What force majeure terms are in our supplier contracts?"** | First answer: a table with **Albemarle Corp** and **Epsilon Tech** (both AUS, score about 0.61), produced by SQL (analyst tool). Second answer: quotes contract text and cites contract IDs (search tool). No permission errors |
+| C | Snowsight > AI > Agent Studio > Agents tab > `GNN_SUPPLY_RISK_AGENT`. Ask: **"Which suppliers are CRITICAL risk?"** then **"What force majeure terms are in our supplier contracts?"** | First answer: a table with **Albemarle Corp** and **Epsilon Tech** (both AUS, score about 0.61), produced by SQL (analyst tool). Second answer: quotes contract text and cites contract IDs (search tool). No permission errors |
 
 ### Stage 7 - Shared workspace
 **What it does:** creates `DEMO_SHARED_WORKSPACES.DEMO_19865_WORKSPACE.DEMO_19865` and uploads

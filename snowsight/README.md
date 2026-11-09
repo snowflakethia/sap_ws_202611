@@ -98,7 +98,7 @@ If the search row shows **WAIT**, wait one minute and run the file again.
 - Instructions = `true/true`
 
 **CHECKPOINT 5, part 2 - in the UI:**
-1. Go to **AI & ML > Agents > GNN_SUPPLY_RISK_AGENT**.
+1. In the left navigation, hover over **AI** > **Agent Studio**. On the **Agents** tab, click **GNN_SUPPLY_RISK_AGENT**.
 2. Ask: **Which suppliers are CRITICAL risk?**
 3. Expected: a table naming **Albemarle Corp** and **Epsilon Tech** (both AUS, GNN risk score about 0.61).
 

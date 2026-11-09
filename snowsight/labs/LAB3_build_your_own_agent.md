@@ -20,7 +20,8 @@
    *Why:* the agent is created in the demo schema, which this role owns. Agents use the privileges of the role
    that runs them, and this role can read the semantic view and the search service.
 
-2. **Create the agent.** Go to **AI & ML > Agents** and click **Create agent**:
+2. **Create the agent.** In the left navigation, hover over **AI** > **Agent Studio**, then click the blue
+   **Create agent** button (top-right):
    - Database `DEMO_19865_DB`, schema `GNN_SUPPLY_CHAIN_RISK`
    - Agent object name `MY_SUPPLY_RISK_AGENT`, display name `My Supply Risk Agent`
    - Click **Create agent**, then open the new agent and click **Edit**.
@@ -64,7 +65,7 @@
 ---
 
 ## Expected result
-- **AI & ML > Agents** lists **2 agents**: `GNN_SUPPLY_RISK_AGENT` and `MY_SUPPLY_RISK_AGENT`.
+- **AI > Agent Studio** (**Agents** tab) lists **2 agents**: `GNN_SUPPLY_RISK_AGENT` and `MY_SUPPLY_RISK_AGENT`.
 - **Question 1:** both agents name **Albemarle Corp** and **Epsilon Tech**. A simple, single-tool question
   doesn't need instructions.
 - **Question 2:** your agent may call only one tool, call them in a different order, or give a less complete
