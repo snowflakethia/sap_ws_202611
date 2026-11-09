@@ -11,19 +11,62 @@ Allow about 30 minutes. You only need a browser.
 > see in dialogs such as *Create workspace from Git repository*. If that role isn't ACCOUNTADMIN, the dialog
 > says *"No API integration available"* even after Step 1.
 
+### New to GitHub? You don't need to clone anything
+
+You **don't** need a GitHub account, Git, or any downloads. Snowflake reads this course straight from
+GitHub for you:
+
+| What you might expect | What actually happens |
+| --- | --- |
+| "Clone the repository to my laptop" | **Not needed.** Step 1 tells Snowflake where the course is, and Snowflake fetches it itself |
+| "Download the files and upload them" | **Not needed.** Step 2 shows every course file inside Snowsight |
+| "Sign in to GitHub" | **Not needed.** The course repository is public |
+
+The only thing you take from GitHub is **one block of text** in Step 1, and it's on this page.
+To copy a grey code block on GitHub, hover over it and click the **copy icon** in its top-right corner.
+
 ---
 
 ## Step 1 - Connect your account to the course repository (once, copy and paste)
 
 The only step where you copy code by hand.
 
-1. In GitHub, open [`snowsight/00_bootstrap.sql`](snowsight/00_bootstrap.sql) and click the **Copy raw file** icon
-   (top-right of the file view).
+1. Hover over the grey box below and click its **copy icon** (top-right corner of the box).
 2. In Snowsight, go to **Projects > Workspaces**. With **My Workspace** selected, click **+ Add new > SQL File**.
    Name it `bootstrap.sql`.
-3. Paste the code into the editor.
+3. Paste into the editor (Ctrl/Cmd + V).
 4. In the editor's context bar, select role **ACCOUNTADMIN**. You can leave the warehouse empty.
 5. Click the arrow next to **Run** > **Run All** (or press Ctrl/Cmd + Shift + Enter).
+
+```sql
+-- GNN Supply Chain Risk training - Step 1: connect this account to the course on GitHub
+-- (same as snowsight/00_bootstrap.sql)
+USE ROLE ACCOUNTADMIN;
+
+CREATE OR REPLACE API INTEGRATION GNN_KIT_GITHUB
+    API_PROVIDER = git_https_api
+    API_ALLOWED_PREFIXES = ('https://github.com/snowflakethia/')
+    ENABLED = TRUE
+    COMMENT = 'GNN Supply Chain Risk training - read access to the public GitHub repo';
+
+CREATE DATABASE IF NOT EXISTS TRAINING_KIT_REPO
+    COMMENT = 'GNN Supply Chain Risk training - GitHub repo clone and file staging';
+
+CREATE GIT REPOSITORY IF NOT EXISTS TRAINING_KIT_REPO.PUBLIC.GNN_KIT
+    API_INTEGRATION = GNN_KIT_GITHUB
+    ORIGIN = 'https://github.com/snowflakethia/sap_ws_202611.git'
+    COMMENT = 'GNN Supply Chain Risk training kit';
+
+ALTER GIT REPOSITORY TRAINING_KIT_REPO.PUBLIC.GNN_KIT FETCH;
+
+CREATE STAGE IF NOT EXISTS TRAINING_KIT_REPO.PUBLIC.KIT_FILES
+    COMMENT = 'Data files copied from the Git repository before loading';
+
+-- CHECKPOINT 1: expect exactly 4 CSV files.
+LIST @TRAINING_KIT_REPO.PUBLIC.GNN_KIT/branches/main/data/sap/;
+```
+
+(The same code is also in [`snowsight/00_bootstrap.sql`](snowsight/00_bootstrap.sql), with comments.)
 
 **Checkpoint 1 - you should see:** a result with **4 rows**, ending in
 `s4custom_billofmaterials.csv`, `s4custom_materials.csv`, `s4custom_purchase_orders.csv` and `s4custom_vendors.csv`.
@@ -31,7 +74,8 @@ The only step where you copy code by hand.
 | If you see | Do this |
 | --- | --- |
 | `Insufficient privileges to operate on account` | Your role isn't ACCOUNTADMIN. Switch the role in the context bar and run again |
-| `Repository ... not found` / `403` | Check your internet access and the URL in the file; don't edit anything else |
+| `Repository ... not found` / `403` | Check your internet access; don't change the code |
+| Only part of the code ran | You selected some lines before running. Click inside the editor, then use **Run All** |
 
 ---
 
