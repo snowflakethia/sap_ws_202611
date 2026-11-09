@@ -32,6 +32,46 @@
 > **Good to know:** the 12 contracts are with the **external, Tier 2 suppliers** you met in Lab 1 (for example
 > Tokyo Chemical Works and Jiangxi Graphite Ltd), not with the 50 SAP vendors. Keep that in mind for question 4.
 
+### Four ideas that make this trustworthy
+
+**1. Cortex Analyst: you ask in English, it answers in SQL.**
+Cortex Analyst turns a business question into SQL, runs it on your warehouse, and returns real rows. It doesn't
+guess numbers: every figure in the answer comes from a query you can read in the trace.
+
+**2. The semantic view: the dictionary the AI reads first.**
+A raw SAP column called `LIFNR` means nothing to an LLM. The semantic view gives each table and column a business
+name, a description and synonyms ("GNN-derived risk score", "vendor", "supplier"), so the AI writes SQL in
+business terms. That's why the trace shows two versions of the SQL:
+- **Input > SQL Query** uses the semantic view's *logical* names, for example `FROM __vw_supplier_risk`. Snowflake
+  puts two underscores in front of logical table names so they can't clash with real ones.
+- **Output > Final SQL** is the same query rewritten against the real tables. That's what actually ran.
+
+**3. Verified queries: answers your data team has signed off.**
+A verified query is a business question paired with SQL that a person has checked and approved, stored in the
+semantic view. In Snowflake's words, Cortex Analyst "leverages relevant SQL queries from the repository when
+answering similar questions". In the trace:
+- **Verified Query Used = true**: the answer was built from approved SQL. Same question, same logic, every time.
+- **Verified Query Used = false**: the LLM wrote the SQL itself, from the semantic view. It's usually right, but it's
+  the version you should read before you trust it.
+
+Your most important business questions ("top-risk suppliers", "single-source parts") are the ones to verify.
+This semantic view has two.
+
+**4. Cortex Search: finding the right paragraph, not just the right word.**
+Contracts are text, so SQL can't read them. Cortex Search is Snowflake's managed search engine for text. Every
+search combines three techniques:
+- **vector search**, which finds passages with the same *meaning* (a search for "force majeure" can also match
+  wording like "events beyond the parties' reasonable control");
+- **keyword search**, which finds exact words, contract IDs and names;
+- **semantic reranking**, which puts the most relevant passages first.
+
+The agent then writes its answer **only from the passages it retrieved**, a pattern called *retrieval-augmented
+generation* (RAG). The trace shows you exactly which passages those were.
+
+*Sources: Snowflake documentation, "Cortex Analyst Verified Query Repository"
+(docs.snowflake.com/en/user-guide/views-semantic/verified-query-repository) and "Cortex Search"
+(docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-search/cortex-search-overview).*
+
 ---
 
 ## Step 1 - Open the agent
@@ -59,9 +99,11 @@ conversation, on the right, is a toolbar: **New thread | Show Traces | Show insp
 
    | Step | What it means |
    | --- | --- |
+   | **Semantic Context** | (Sometimes shown, on the first question of a thread) the agent loads the semantic view's descriptions |
    | **LLM Planning** | The agent reads your question and picks a tool |
-   | **SQL Execution** | Cortex Analyst wrote SQL and ran it. **This is the one you want** |
-   | **LLM Response Generation** | The agent turns the rows into the written answer |
+   | **SQL Execution** | Cortex Analyst wrote SQL and ran it. **Click this for data questions** |
+   | **Cortex Search** | The agent searched the contracts. **Click this for document questions** |
+   | **LLM Response Generation** | The agent turns the rows or passages into the written answer |
 
 3. Click **SQL Execution**. The right-hand panel shows:
 
@@ -73,7 +115,12 @@ conversation, on the right, is a toolbar: **New thread | Show Traces | Show insp
    | **Status** | `Success` |
    | **Input > SQL Query** | The SQL as written against the semantic view (short and readable) |
    | **Output > Final SQL** | The SQL that actually ran on Snowflake (expanded into real table and column names) |
+   | **Output > SQL Results** | The rows the query returned: the raw facts behind the written answer |
    | **Query ID** | Copy it to find the same query in **Monitoring > Query History** |
+
+   For a **Cortex Search** step, the right-hand panel instead shows **Input > Query** (the search text the agent
+   chose), **Parameters** (`Limit` = how many passages, `Columns` = which fields come back) and **Output > Results**
+   (the contract text it retrieved).
 
 4. Click **Hide traces** (top-right) to return to the chat. Ask the next question, then open the traces again.
 
@@ -92,16 +139,29 @@ Ask each question **exactly as written**, then open **Show Traces** and check th
 **Why this question:** it's a pure structured-data question. The agent should turn "CRITICAL risk" into a
 filter on `RISK_CATEGORY` in `VW_SUPPLIER_RISK`.
 **Expected answer:** **Albemarle Corp** and **Epsilon Tech** (both AUS, Tier 1, GNN risk score about 0.61).
-**In the trace:** an **SQL Execution** step. Open **Input > SQL Query** and find the `WHERE` clause, something
-like `risk_category = 'CRITICAL'`. That one line is the agent's interpretation of your words.
+**In the trace:** an **SQL Execution** step with **Verified Query Used = false**: no approved query matched, so
+the LLM wrote this SQL itself. Open **Input > SQL Query** and find the filter:
+
+```sql
+SELECT vendor_id, vendor_name, country_code, tier, risk_category, gnn_risk_score, ...
+FROM __vw_supplier_risk
+WHERE risk_category ILIKE 'CRITICAL'
+ORDER BY gnn_risk_score DESC NULLS LAST
+```
+
+That `WHERE` line is the AI's interpretation of your words "CRITICAL risk". It's correct here, and you could check
+it because the SQL is right in front of you.
 
 ### Q2. *Which Tier 1 suppliers have a GNN risk score above 0.6?*
 **Why this question:** it matches one of the semantic view's **verified queries** word for word, so Cortex
 Analyst can reuse pre-approved SQL instead of writing new SQL.
 **Expected answer:** the **same 2 suppliers** as Q1.
-**In the trace:** **Verified Query Used = true**. Compare it with Q1, which the LLM wrote from scratch.
+**In the trace:** **Verified Query Used = true**, and the SQL Query is the approved one:
+`... FROM __vw_supplier_risk WHERE tier = 1 AND gnn_risk_score > 0.6 ORDER BY gnn_risk_score DESC NULLS LAST`.
+Put the Q1 and Q2 traces side by side: same suppliers, but Q2's logic was **signed off by a person in advance**.
 **Takeaway:** verified queries are how a data team makes the answers to its most important questions
-repeatable and trusted.
+repeatable and trusted: when someone asks a matching question, Cortex Analyst starts from the approved SQL instead
+of writing its own.
 
 ### Q3. *What force majeure terms are in our supplier contracts?*
 **Why this question:** the answer lives in text, not in a column, so SQL can't answer it. Cortex Search finds
@@ -109,8 +169,14 @@ passages by **meaning**, not just keywords.
 **Expected answer:** quotes from contract text, with contract IDs and titles. Contracts that mention force
 majeure include **SC-2023-001** (Cobalt Supply Agreement), **SC-2023-008** (Graphite Products Supply) and
 **SC-2023-012** (Emergency Supply and Remediation).
-**In the trace:** **no SQL Execution step**. You'll see a search step for `contract_search` instead. Click it
-to see the passages it retrieved: the agent's answer should only quote what's there.
+**In the trace:** **no SQL Execution step**. Instead there's a **Cortex Search** step. Click it:
+- **Input > Query** reads *force majeure clause*. The agent turned your question into a short search phrase.
+- **Parameters**: `Limit = 4` (the 4 best passages), `Columns = CONTRACT_ID, CONTRACT_TITLE`.
+- **Output > Results** shows the contract text it found, starting with *SUPPLY AGREEMENT NO. SC-2023-001*
+  (Freeport Cobalt and Congo Cobalt Mines).
+
+Compare the Results with the written answer: every contract the agent mentions should appear in the Results. That's
+RAG working as intended. The answer is grounded in your documents, not in the LLM's memory.
 
 ### Q4. *Which external suppliers have the strongest predicted hidden links to our suppliers, and what do our contracts with them say about force majeure?*
 **Why this question:** it needs a number (the GNN's predicted links, from `VW_HIDDEN_DEPENDENCIES`) **and**
@@ -122,8 +188,8 @@ two kinds of data.
 - Then contract details: Jiangxi Graphite's **SC-2023-008** mentions force majeure, and Queensland Minerals has
   a Lithium Supply Agreement (**SC-2023-002**).
 
-**In the trace:** **both** tools, in order. First an **SQL Execution** step (the hidden links), then a search step
-(the contracts). That order is the agent's orchestration instructions at work.
+**In the trace:** **both** tools, in order. First an **SQL Execution** step (the hidden links), then a
+**Cortex Search** step (the contracts). That order is the agent's orchestration instructions at work.
 
 ### Q5. *Which materials have the highest GNN risk score?*
 **Why this question:** it matches the semantic view's other verified query. It also shows that the agent covers
@@ -136,9 +202,9 @@ two kinds of data.
 ---
 
 ## Expected result
-- 5 answers, with no errors and **Status = Success** on every SQL Execution step.
-- Q1, Q2, Q5: an **SQL Execution** step. Q2 and Q5 show **Verified Query Used = true**.
-- Q3: a search step, no SQL. Q4: **both**, SQL first.
+- 5 answers, with no errors and **Status = Success** on every SQL Execution and Cortex Search step.
+- Q1, Q2, Q5: an **SQL Execution** step. Q1 shows **Verified Query Used = false**; Q2 and Q5 show **true**.
+- Q3: a **Cortex Search** step, no SQL. Q4: **both**, SQL Execution first.
 - The answers are written by an LLM, so the **wording and layout vary** from run to run and between trainees.
   The **facts** (names, scores, contract IDs) should match the expected values above. The SQL is where you check
   them.
