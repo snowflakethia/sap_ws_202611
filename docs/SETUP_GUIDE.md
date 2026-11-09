@@ -1,5 +1,9 @@
 # Setup Guide - GNN Supply Chain Risk Training Environment
 
+> **Audience: trainers and administrators using the Snowflake CLI.**
+> Trainees who only have Snowsight should follow [`snowsight/README.md`](../snowsight/README.md) instead.
+> Both paths run the same `sql/` scripts and give the same result.
+
 This guide rebuilds the **GNN Supply Chain Risk** demo from Snowflake account `F9A3UBGT-DEFAULT`
 in a separate trainee account. Each trainee gets their own account and has the ACCOUNTADMIN role.
 
