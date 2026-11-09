@@ -30,15 +30,30 @@
    *Why:* an agent is a Snowflake object, like a table. It lives in a schema, has an owner, and can be granted
    to other roles.
 
-   > **Where you'll work for steps 3 to 6: this agent's Configuration tab.**
+   > **Where you'll work for steps 3 to 7: this agent's Configuration tab.**
    > Tools are added **inside the agent**, not from the AI menu. The **AI > Analyst** page (titled *Cortex
    > Analyst*, with "Select database to see semantic views") and the **AI > Search** page are for browsing
    > semantic views and search services. You can't add tools to an agent there.
    > If you've lost the agent page: **AI > Agent Studio** > **Agents** tab > click **MY_SUPPLY_RISK_AGENT** >
    > **Configuration** tab.
+   >
+   > The Configuration tab has its own row of sub-tabs: **General | Instructions | Tools | Skills | MCP**.
 
-3. **Add tool 1: Cortex Analyst.** On the **Configuration** tab, find the **Tools** section. Next to
-   **Cortex Analyst**, click **+ Add**, then fill in:
+3. **Open the Tools sub-tab and set the built-in tools.** Click **Configuration**, then the **Tools** sub-tab.
+   The page is titled **Tools** (*"Add tools your agent can use during conversations"*). The first three sections
+   are built-in tools with an on/off switch on the right:
+
+   | Section | Set it to | Why |
+   | --- | --- | --- |
+   | **Web search** | Leave **off** | The answers must come from *your* data, not the internet. (On most training accounts the switch is disabled anyway: *"Contact your account admin to enable web search tool"*) |
+   | **Analytical search** | Leave **off** | Runs heavier analytics over search indexes, at extra cost. Not needed for 12 contracts |
+   | **Code Execution tool** | **Turn it off** (it's **on** by default for new agents) | The main agent has exactly two tools, analyst and search. Turning this off keeps the comparison fair: the only real difference is the instructions |
+
+   *Why it matters:* every switched-on tool is one more option on the agent's "menu" (the **Available Tools** list
+   you saw in Lab 2's traces). More options mean more ways for the agent to pick the wrong one.
+
+4. **Add tool 1: Cortex Analyst.** Scroll down to **Query structured data** (*"Add semantic views to query data
+   using natural language"*) and click **+ Add semantic view** on the right. Fill in:
 
    | Field | Value | What it means |
    | --- | --- | --- |
@@ -47,13 +62,14 @@
    | Name | `GNN_SUPPLY_CHAIN_RISK_AGENT` | How the agent refers to this tool internally |
    | Description | `This dataset focuses on supply chain risk management` | **The agent reads this to decide when to use the tool**, so write it for the LLM, not for people |
 
-   Click **Add** to close the dialog. The tool now appears under **Tools**.
+   Confirm the dialog. The semantic view now appears under **Query structured data**.
 
    *Remember Lab 2:* this description is what the agent sees in **Available Tools** in its trace. We're
-   deliberately keeping it vague.
+   deliberately keeping it vague. Compare it with the main agent's: *"Query supply chain risk data including
+   supplier risk scores, network analysis, and risk factors"*.
 
-4. **Add tool 2: Cortex Search.** Still in the **Tools** section, next to **Cortex Search Services**, click
-   **+ Add**, then fill in:
+5. **Add tool 2: Cortex Search.** Just below, in **Search documents and unstructured data** (*"Add Cortex Search
+   services to power chat experiences"*), click **+ Add search service** on the right. Fill in:
 
    | Field | Value | What it means |
    | --- | --- | --- |
@@ -63,19 +79,25 @@
    | Name | `GNN_CONTRACT_SEARCH_SERVICE` | Internal tool name |
    | Description | `Contract search service analyzing contract details using CONTRACT_TEXT attribute (unstructured data)` | Tells the agent this tool is for contract *text* |
 
-   Click **Add**. You should now see **2 tools** under **Tools**.
+   Confirm the dialog. The service now appears under **Search documents and unstructured data**.
 
-5. **Orchestration** (same **Configuration** tab, further down): leave the model on **auto** (Snowflake picks a
-   suitable model). Under **response instructions**, enter:
+   Leave **Custom tools** (the last section) empty. Custom tools let an agent call your own functions or
+   procedures; this lab doesn't need any.
+
+   **Check before moving on:** Web search off, Analytical search off, Code Execution tool off, **1 semantic view**
+   and **1 search service** added.
+
+6. **Instructions:** click the **Instructions** sub-tab. Under **response instructions**, enter:
    `Answer briefly. Show supplier comparisons as a table.`
-   **Leave the orchestration instructions empty.** That's the experiment.
+   **Leave the orchestration instructions empty.** That's the experiment. Leave the model on its default
+   (**auto**: Snowflake picks a suitable model). If a model setting appears, it's on the **General** sub-tab.
    *Why:* response instructions control **how answers look**. Orchestration instructions control **which tool to
    use, when, and in what order**. The main agent has both; yours has only the first.
 
-6. Click **Save** (top-right). When the button turns grey and reads **Saved**, your changes are stored. You don't
+7. Click **Save** (top-right). When the button turns grey and reads **Saved**, your changes are stored. You don't
    need **Publish** or **Add to Snowflake CoWork** for this lab.
 
-7. **Run the experiment.** Open each agent's **Preview** tab (AI > Agent Studio > click the agent > **Preview**). Ask your agent these two questions from Lab 2, then ask `GNN_SUPPLY_RISK_AGENT` the
+8. **Run the experiment.** Open each agent's **Preview** tab (AI > Agent Studio > click the agent > **Preview**). Ask your agent these two questions from Lab 2, then ask `GNN_SUPPLY_RISK_AGENT` the
    same ones and compare:
    - *Which suppliers are CRITICAL risk?*
    - *Which external suppliers have the strongest predicted hidden links to our suppliers, and what do our
