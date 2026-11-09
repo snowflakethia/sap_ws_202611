@@ -52,6 +52,7 @@ https://app.snowflake.com/<org>/<account>/#/workspaces?action=create_workspace_f
 
 | Problem | Fix |
 | --- | --- |
+| **No API integration available** in the dialog | Click **Cancel**. Run `00_bootstrap.sql` first. Then set your **user-menu** role (bottom-left: your name > Switch role) to **ACCOUNTADMIN**; the dialog lists only integrations that role can use. Open the dialog again |
 | `GNN_KIT_GITHUB` is not in the API integration list | Run `00_bootstrap.sql` first, and make sure your role is ACCOUNTADMIN |
 | "Repository not found" | Check the URL: `https://github.com/snowflakethia/sap_ws_202611.git` |
 | No **From Git repository** option | Your account still uses the classic Worksheets UI. Use Catalog > Git Repositories > `GNN_KIT` > *(file)* > **Copy into worksheet** for each file instead |
