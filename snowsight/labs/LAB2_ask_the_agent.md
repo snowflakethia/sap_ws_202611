@@ -183,28 +183,75 @@ RAG working as intended. The answer is grounded in your documents, not in the LL
 a document (the contract), joined by **supplier name**. This is the agent's real value: one question,
 two kinds of data.
 **Expected answer:**
-- **Queensland Minerals** and **Jiangxi Graphite Ltd** at the top (predicted links to BYD Battery and SK On,
-  probability about 0.62-0.70).
+- The top predicted links (from the trace's SQL Results): **Queensland Minerals → BYD Battery (0.69)**,
+  Queensland Minerals → SK On (0.63), **Jiangxi Graphite Ltd** → BYD Battery (0.62), Shanghai Battery Materials
+  → BYD Battery (0.61) and Jiangxi Graphite Ltd → SK On (0.61).
 - Then contract details: Jiangxi Graphite's **SC-2023-008** mentions force majeure, and Queensland Minerals has
   a Lithium Supply Agreement (**SC-2023-002**).
+- Often a **bar chart** of the links as well. You didn't ask for one: the agent decided a chart would help.
 
-**In the trace:** **both** tools, in order. First an **SQL Execution** step (the hidden links), then a
-**Cortex Search** step (the contracts). That order is the agent's orchestration instructions at work.
+**In the trace: watch the agent think in a loop.** This is the longest trace of the lab (about 45 seconds,
+eight steps):
+
+| # | Step | What the agent is doing |
+| --- | --- | --- |
+| 1 | LLM Planning | "I need numbers first": picks the analyst tool |
+| 2 | SQL Execution | Gets the hidden links (under a second) |
+| 3 | LLM Planning | Reads the rows, sees the supplier names, decides to look up *their* contracts |
+| 4 | Cortex Search | Searches the contracts for those suppliers |
+| 5 | Skill: chart_instructions | Loads its instructions for drawing charts |
+| 6 | LLM Planning | Decides the result is easier to read as a chart |
+| 7 | Chart Generation | Builds the chart |
+| 8 | LLM Response Generation | Writes the final answer from everything above |
+
+This is what makes it an **agent** and not a chatbot: it **plans, acts, looks at the result, and plans again**.
+Step 4 couldn't have been written in advance, because the agent only knew which suppliers to search for after
+step 2 returned them.
+
+**Three things to click in this trace:**
+
+1. **Chart Generation.** **Input > Input Chart Spec** is a small JSON recipe (`"mark": "bar"`, `SOURCE_NAME` on
+   the y-axis), the *Vega-Lite* format that many charting tools use. Under it, **SQL Results** shows the exact rows
+   the chart was drawn from. Even the picture is traceable to a query.
+2. **Any LLM Planning step > Available Tools.** This is the agent's "menu": each tool with its parameters and a
+   description (for `contract_search`: `columns`, `filter`, `limit`...). The LLM chooses tools **by reading those
+   descriptions**, so a vague tool description gives you a confused agent. You'll write your own in Lab 3.
+3. **LLM Response Generation > Response Instruction.** It starts *"Be direct and analytical. Lead with the key
+   finding or metric..."*. That's not the AI's personality. It's the `response` instruction written in this
+   agent's definition, which you can see in the **Configuration** tab. Tone, tables, bullet points and "flag
+   critical risks prominently" are all settings you control.
 
 ### Q5. *Which materials have the highest GNN risk score?*
 **Why this question:** it matches the semantic view's other verified query. It also shows that the agent covers
 **parts** (from `VW_MATERIAL_RISK`), not just suppliers.
 **Expected answer:** a ranked list led by materials such as *Battery Module 400V*, *High-Voltage Harness* and
 *Silicon Anode Additive* (GNN risk score about 0.48).
-**In the trace:** **Verified Query Used = true**, and the SQL Query reads
-`SELECT ... FROM __vw_material_risk ORDER BY gnn_risk_score DESC NULLS LAST LIMIT 15`.
+**In the trace:** **Verified Query Used = true** (`... FROM __vw_material_risk ORDER BY gnn_risk_score DESC NULLS
+LAST LIMIT 15`), as in Q2. Now look somewhere new: **where the time and the cost go.**
+
+1. Compare the bars in the middle panel. **SQL Execution** takes under a second (about 0.8 s). The two **LLM**
+   steps take about 15 seconds together. On data this size, the database is the fast part; most of the wait is
+   the model reading and writing.
+2. Click **LLM Response Generation**. The top of the panel shows the **Model Name** and the **token counts**. In our
+   run: about **74,000 input tokens** and fewer than **900 output tokens**.
+
+   A *token* is a chunk of text of about 4 characters, and it's how LLM usage is measured and billed. Why does a
+   one-line question need 74,000 input tokens? Because each step sends the model **everything it needs**: the
+   agent's instructions, the descriptions of every tool, the semantic view context, the SQL results and the
+   conversation so far. The answer itself is small.
+
+**Takeaway:** the model reads far more than it writes. Short, sharp instructions and tool descriptions, starting a
+**New thread** for unrelated questions, and returning only the rows you need (note the `LIMIT 15`) all keep agents
+fast and cheap. Your numbers will differ from ours, but the input-heavy pattern holds.
 
 ---
 
 ## Expected result
 - 5 answers, with no errors and **Status = Success** on every SQL Execution and Cortex Search step.
 - Q1, Q2, Q5: an **SQL Execution** step. Q1 shows **Verified Query Used = false**; Q2 and Q5 show **true**.
-- Q3: a **Cortex Search** step, no SQL. Q4: **both**, SQL Execution first.
+- Q3: a **Cortex Search** step, no SQL. Q4: **SQL Execution, then Cortex Search**, with LLM Planning between
+  them, and usually a **Chart Generation** step.
+- Q5: SQL Execution under a second; most of the time is in the LLM steps; input tokens far exceed output tokens.
 - The answers are written by an LLM, so the **wording and layout vary** from run to run and between trainees.
   The **facts** (names, scores, contract IDs) should match the expected values above. The SQL is where you check
   them.
@@ -216,8 +263,10 @@ two kinds of data.
    let the LLM write the short version, and who benefits from that?
 3. In Q4, the agent links risk data to contracts by supplier **name**. What could go wrong with name matching in
    real data, and how would you make it more robust?
-4. Q4 follows the agent's instructions (analyst first, then search). Open the **Configuration** tab: where would
-   you change that behaviour?
+4. In Q4, the agent drew a chart nobody asked for. Is that helpful or risky in a business report? Which line in
+   the **Response Instruction** would you add or change to control it?
+5. Q5 used about 74,000 input tokens to write fewer than 900. Name two changes to the agent that would cut that
+   number without hurting answer quality.
 
 **Next:** [Lab 3 - Build your own agent](LAB3_build_your_own_agent.md). You'll build one like this yourself, and
 use the same traces to see how its behaviour changes.
