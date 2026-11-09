@@ -61,6 +61,8 @@
    - *Which suppliers are CRITICAL risk?*
    - *Which external suppliers have the strongest predicted hidden links to our suppliers, and what do our
      contracts with them say about force majeure?*
+   - After each answer, click **Show Traces** and compare the steps (see Lab 2, Step 2). Did both agents call the
+     same tools, in the same order? Did they run the same **SQL Execution**? The traces show *why* the answers differ.
 
 ---
 
