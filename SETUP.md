@@ -37,8 +37,7 @@ GitHub for you:
 | "Download the files and upload them" | **Not needed.** Step 2 shows every course file inside Snowsight |
 | "Sign in to GitHub" | **Not needed.** The course repository is public |
 
-The only thing you take from GitHub is **one block of text** in Step 1, and it's on this page.
-Step 1 explains exactly how to copy it, including a plain-text link that works on any device.
+The only thing you take from GitHub is **one block of text** in Step 1, copied from a plain-text page.
 
 ---
 
@@ -46,73 +45,33 @@ Step 1 explains exactly how to copy it, including a plain-text link that works o
 
 The only step where you copy code by hand. **Don't create a new workspace for this step.**
 
-> **You'll use two browser tabs:**
-> - **Tab A - GitHub:** this page, where you copy the code.
-> - **Tab B - Snowsight:** where you paste and run it.
->
-> The copy instructions below happen in **Tab A (GitHub)**, not in Snowsight.
+> **You'll use two browser tabs:** one shows the code (Tab A), and Snowsight is where you paste and run it (Tab B).
 
-**In Tab B (Snowsight): open an empty SQL file**
+**In Snowsight: open an empty SQL file**
 1. In the left navigation, click **Workspaces**.
 2. Check that the selector at the top of the file list says **My Workspace**. If it shows another name, click
    it and choose **My Workspace**.
 3. Click the grey **+ Add new** button (just above the file list), then **SQL File**. Name it `bootstrap.sql`
    and press Enter. An empty editor tab opens.
 
-**In Tab A (GitHub): copy the code, using ONE of these options**
+**In a new browser tab: copy the code**
 
-4. **Option 1 - plain-text page (easiest):**
-   1. Open this address in a new browser tab (click it, or copy it into the address bar):
-      **https://raw.githubusercontent.com/snowflakethia/sap_ws_202611/main/snowsight/00_bootstrap.sql**
-   2. The page shows **only the code**, as plain text with no GitHub menus. Its first line starts with `-- ====`.
-   3. Click anywhere on that text, press **Ctrl + A** (Mac: **Cmd + A**) to select all of it, then **Ctrl + C**
-      (Mac: **Cmd + C**) to copy.
+4. Open this address in a new browser tab (click it, or paste it into the address bar):
 
-   **Option 2 - GitHub file page:**
-   1. Open **https://github.com/snowflakethia/sap_ws_202611/blob/main/snowsight/00_bootstrap.sql**
-   2. Above the code, on the right of the grey bar that shows the file size, click the **Copy raw file**
-      button (two overlapping squares). It briefly shows a tick.
-   3. Don't use Ctrl + A on this page. That selects the whole web page, not just the code.
+   **https://raw.githubusercontent.com/snowflakethia/sap_ws_202611/main/snowsight/00_bootstrap.sql**
 
-   **Option 3 - this page:** scroll down to the grey code box below and hover over it. A **copy** button (two
-   overlapping squares) appears in the box's top-right corner. Click it.
+   The page shows only the code, as plain text. Its first line starts with `-- ====`.
+   Click anywhere on the text, press **Ctrl + A** (Mac: **Cmd + A**) to select all, then **Ctrl + C**
+   (Mac: **Cmd + C**) to copy.
 
-**Back in Tab B (Snowsight): paste and run**
+   *Page doesn't open, or your company network blocks it?* Use [Appendix A](#appendix-a---other-ways-to-copy-the-step-1-code).
+
+**Back in Snowsight: paste and run**
 5. Click inside the empty `bootstrap.sql` editor and paste: **Ctrl + V** (Mac: **Cmd + V**). You should see about
-   40 lines, starting with `-- ====` or `-- GNN Supply Chain Risk training`.
+   45 lines, starting with `-- ====`.
 6. At the top of the editor, click **Choose role** and select **ACCOUNTADMIN**. Leave **Choose warehouse** empty.
 7. Click the small **arrow next to Run** > **Run All** (or press Ctrl/Cmd + Shift + Enter).
    Don't select any lines first; Run All runs everything.
-
-```sql
--- GNN Supply Chain Risk training - Step 1: connect this account to the course on GitHub
--- (same as snowsight/00_bootstrap.sql)
-USE ROLE ACCOUNTADMIN;
-
-CREATE OR REPLACE API INTEGRATION GNN_KIT_GITHUB
-    API_PROVIDER = git_https_api
-    API_ALLOWED_PREFIXES = ('https://github.com/snowflakethia/')
-    ENABLED = TRUE
-    COMMENT = 'GNN Supply Chain Risk training - read access to the public GitHub repo';
-
-CREATE DATABASE IF NOT EXISTS TRAINING_KIT_REPO
-    COMMENT = 'GNN Supply Chain Risk training - GitHub repo clone and file staging';
-
-CREATE GIT REPOSITORY IF NOT EXISTS TRAINING_KIT_REPO.PUBLIC.GNN_KIT
-    API_INTEGRATION = GNN_KIT_GITHUB
-    ORIGIN = 'https://github.com/snowflakethia/sap_ws_202611.git'
-    COMMENT = 'GNN Supply Chain Risk training kit';
-
-ALTER GIT REPOSITORY TRAINING_KIT_REPO.PUBLIC.GNN_KIT FETCH;
-
-CREATE STAGE IF NOT EXISTS TRAINING_KIT_REPO.PUBLIC.KIT_FILES
-    COMMENT = 'Data files copied from the Git repository before loading';
-
--- CHECKPOINT 1: expect exactly 4 CSV files.
-LIST @TRAINING_KIT_REPO.PUBLIC.GNN_KIT/branches/main/data/sap/;
-```
-
-(The same code is also in [`snowsight/00_bootstrap.sql`](snowsight/00_bootstrap.sql), with comments.)
 
 **Checkpoint 1 - you should see:** in the results pane at the bottom, a table with **4 rows**, ending in
 `s4custom_billofmaterials.csv`, `s4custom_materials.csv`, `s4custom_purchase_orders.csv` and `s4custom_vendors.csv`.
@@ -277,3 +236,50 @@ Then run Step 9 again.
 | A row says FAIL | Run the same file again. If it still fails, re-run the previous step, then this one |
 | The agent says it has no access | Switch your user-menu role to ACCOUNTADMIN and ask again |
 | Anything else | Run Step 9 and show the result to your trainer |
+
+---
+
+## Appendix A - Other ways to copy the Step 1 code
+
+**You only need this if the plain-text page in Step 1 won't open.** That usually means a company network or
+browser policy blocks `raw.githubusercontent.com`. Use **one** of these methods, then continue with Step 1, action 5.
+
+### A1 - GitHub file page (when the plain-text page is blocked)
+1. Open **https://github.com/snowflakethia/sap_ws_202611/blob/main/snowsight/00_bootstrap.sql**
+2. Above the code, on the right of the grey bar that shows the file size, click the **Copy raw file** button
+   (two overlapping squares). It briefly shows a tick.
+3. **Don't** use Ctrl + A on this page. That selects the whole web page (menus, line numbers), not just the code.
+
+### A2 - Copy from this page (when GitHub file pages are blocked too)
+Hover over the grey box below. A **copy** button (two overlapping squares) appears in its top-right corner;
+click it. If no button appears (for example on a tablet), drag to select the whole box, then press Ctrl/Cmd + C.
+
+```sql
+-- GNN Supply Chain Risk training - Step 1: connect this account to the course on GitHub
+-- (same as snowsight/00_bootstrap.sql)
+USE ROLE ACCOUNTADMIN;
+
+CREATE OR REPLACE API INTEGRATION GNN_KIT_GITHUB
+    API_PROVIDER = git_https_api
+    API_ALLOWED_PREFIXES = ('https://github.com/snowflakethia/')
+    ENABLED = TRUE
+    COMMENT = 'GNN Supply Chain Risk training - read access to the public GitHub repo';
+
+CREATE DATABASE IF NOT EXISTS TRAINING_KIT_REPO
+    COMMENT = 'GNN Supply Chain Risk training - GitHub repo clone and file staging';
+
+CREATE GIT REPOSITORY IF NOT EXISTS TRAINING_KIT_REPO.PUBLIC.GNN_KIT
+    API_INTEGRATION = GNN_KIT_GITHUB
+    ORIGIN = 'https://github.com/snowflakethia/sap_ws_202611.git'
+    COMMENT = 'GNN Supply Chain Risk training kit';
+
+ALTER GIT REPOSITORY TRAINING_KIT_REPO.PUBLIC.GNN_KIT FETCH;
+
+CREATE STAGE IF NOT EXISTS TRAINING_KIT_REPO.PUBLIC.KIT_FILES
+    COMMENT = 'Data files copied from the Git repository before loading';
+
+-- CHECKPOINT 1: expect exactly 4 CSV files.
+LIST @TRAINING_KIT_REPO.PUBLIC.GNN_KIT/branches/main/data/sap/;
+```
+
+These are the same statements as `snowsight/00_bootstrap.sql`, without the explanatory header.
