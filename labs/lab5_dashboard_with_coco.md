@@ -155,7 +155,7 @@ should show `1`.
 | No time, or CoCo isn't available | Use the fallback below |
 
 **Fallback (2 minutes):** in `gnn_training`, open `snowsight/07_lab5_dashboard.sql`, set role **ACCOUNTADMIN**
-and **Run All**. It deploys the tested reference app from the course repository (`snowsight/lab5/streamlit_app.py`),
+and **Run All**. It deploys the tested reference app from the course repository (`labs/lab5_app/streamlit_app.py`),
 with the same name and the same pages. Expected: **2 rows, both PASS**.
 
 ## Step 4 - Look behind the app
