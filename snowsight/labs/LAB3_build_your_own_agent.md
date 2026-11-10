@@ -1,5 +1,10 @@
 # Lab 3 - Build your own agent: what makes an agent good?
 
+> **Disclaimer:** all data in this lab is **synthetic and for demonstration only**. Company names (for example
+> Albemarle Corp, BYD Battery or Queensland Minerals) are used for illustration. The vendors, purchase orders,
+> trade records, contracts, risk scores and predicted links are invented and **don't describe any real
+> company, relationship or risk**. Don't use them for business decisions.
+
 > **In Lab 2 the agent seemed to "just know" when to query data and when to read contracts. It doesn't.** That
 > behaviour comes from a few lines of configuration that someone wrote. In this lab you build an agent from the
 > same parts, without those lines, and ask it the same questions. The difference you see is the difference

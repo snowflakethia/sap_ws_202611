@@ -1,5 +1,10 @@
 # Lab 1 - Explore the data
 
+> **Disclaimer:** all data in this lab is **synthetic and for demonstration only**. Company names (for example
+> Albemarle Corp, BYD Battery or Queensland Minerals) are used for illustration. The vendors, purchase orders,
+> trade records, contracts, risk scores and predicted links are invented and **don't describe any real
+> company, relationship or risk**. Don't use them for business decisions.
+
 **Goal:** understand the data behind the agent before you start asking it questions.
 **Time:** 15 minutes. **Where:** Snowsight > Projects > Workspaces > `DEMO_19865`, or any SQL worksheet.
 

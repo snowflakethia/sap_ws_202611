@@ -1,5 +1,10 @@
 # Lab 3 - Build your own agent
 
+> **Disclaimer:** all data in this lab is **synthetic and for demonstration only**. Company names (for example
+> Albemarle Corp, BYD Battery or Queensland Minerals) are used for illustration. The vendors, purchase orders,
+> trade records, contracts, risk scores and predicted links are invented and **don't describe any real
+> company, relationship or risk**. Don't use them for business decisions.
+
 **Goal:** create an agent yourself in Snowsight, using the same semantic view and search service.
 **Time:** 20 minutes. **Where:** Snowsight > AI > Agent Studio > **Create agent** (top-right).
 

@@ -1,5 +1,10 @@
 # Setup Guide - GNN Supply Chain Risk Training Environment
 
+> **Disclaimer:** all data in this lab is **synthetic and for demonstration only**. Company names (for example
+> Albemarle Corp, BYD Battery or Queensland Minerals) are used for illustration. The vendors, purchase orders,
+> trade records, contracts, risk scores and predicted links are invented and **don't describe any real
+> company, relationship or risk**. Don't use them for business decisions.
+
 > **Audience: trainers and administrators using the Snowflake CLI.**
 > Trainees who only have Snowsight should follow [`snowsight/README.md`](../snowsight/README.md) instead.
 > Both paths run the same `sql/` scripts and give the same result.

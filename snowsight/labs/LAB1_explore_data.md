@@ -1,5 +1,10 @@
 # Lab 1 - Explore the data: find the supplier nobody told you about
 
+> **Disclaimer:** all data in this lab is **synthetic and for demonstration only**. Company names (for example
+> Albemarle Corp, BYD Battery or Queensland Minerals) are used for illustration. The vendors, purchase orders,
+> trade records, contracts, risk scores and predicted links are invented and **don't describe any real
+> company, relationship or risk**. Don't use them for business decisions.
+
 > **Your SAP vendor master lists 50 suppliers. Two companies that aren't in it at all each sit behind 48 of them.**
 > If *Tokyo Chemical Works* or *Bavaria Specialty Metals* stopped shipping, almost your entire supply base
 > would feel it, and nothing in your ERP would have warned you. In this lab you'll find them yourself, using

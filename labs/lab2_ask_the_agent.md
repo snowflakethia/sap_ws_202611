@@ -1,5 +1,10 @@
 # Lab 2 - Ask the agent
 
+> **Disclaimer:** all data in this lab is **synthetic and for demonstration only**. Company names (for example
+> Albemarle Corp, BYD Battery or Queensland Minerals) are used for illustration. The vendors, purchase orders,
+> trade records, contracts, risk scores and predicted links are invented and **don't describe any real
+> company, relationship or risk**. Don't use them for business decisions.
+
 **Goal:** use `GNN_SUPPLY_RISK_AGENT`, which combines structured risk data (Cortex Analyst over the
 semantic view) with unstructured contracts (Cortex Search).
 **Time:** 20 minutes. **Where:** Snowsight > AI > Agent Studio > Agents tab > `GNN_SUPPLY_RISK_AGENT`.

@@ -1,5 +1,10 @@
 # GNN Supply Chain Risk - Trainee Guide (Snowsight only)
 
+> **Disclaimer:** all data in this lab is **synthetic and for demonstration only**. Company names (for example
+> Albemarle Corp, BYD Battery or Queensland Minerals) are used for illustration. The vendors, purchase orders,
+> trade records, contracts, risk scores and predicted links are invented and **don't describe any real
+> company, relationship or risk**. Don't use them for business decisions.
+
 Welcome! In this course you build a supply chain risk demo in your own Snowflake account, and then
 explore it in four labs. Everything happens in **Snowsight** (the Snowflake web UI). You don't need to
 install anything.

@@ -2,6 +2,13 @@
 
 ### SAP data + a graph neural network + a Cortex Agent, on Snowflake, in about 30 minutes
 
+> **Disclaimer: synthetic data, for demonstration only.** Every record in this lab (SAP vendors, materials,
+> purchase orders and bills of material, trade data, regional risk, supplier contracts, GNN risk scores and
+> predicted links) is **synthetic** and was created for this demo. Some company names are those of real
+> companies (for example Albemarle Corp, BYD Battery, SK On); they're used **for illustration only**. No
+> supplier relationship, contract term, risk score or prediction shown here describes a real company or a real
+> business relationship, and none should be used for business, investment or procurement decisions.
+
 Your SAP system knows your **Tier 1** suppliers: who you buy from, what you buy and what you pay.
 It doesn't know who **your suppliers** buy from. Those hidden Tier 2 and Tier 3 dependencies cause
 the surprises: one chemical plant or one graphite mine quietly feeding half your supply base, until it
@@ -115,6 +122,7 @@ version differs, so you know what you're looking at.
 | SAP data | **Live** SAP BDC data products, shared zero-copy into Snowflake as *catalog-linked databases* (Iceberg tables, no data movement) | A **snapshot** of the same data products, loaded as ordinary Snowflake tables |
 | Names | `S4_ZVENDORINFO_DP_DELTA_SHARING_V1."s4_zvendorinfo_dp_srv:v1"."s4custom_vendors"`, and so on | **Exactly the same** database, schema and table names |
 | Connector needed | An SAP BDC tenant and SAP BDC Connect | None: works in any Snowflake account, including trials |
+| Data content | Your company's real SAP data | **Synthetic demo data** (see the disclaimer at the top). Same structure as real SAP data products, invented values |
 | Freshness | Updates as SAP changes | Fixed at the time of extraction (2026-11) |
 | Writing back to SAP | `publish_to_BDC.ipynb` shares the GNN's predicted links back to SAP BDC as a data product | The notebook is included **for reading only**. It needs a BDC connection to run |
 

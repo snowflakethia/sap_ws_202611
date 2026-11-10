@@ -1,5 +1,10 @@
 # Lab 2 - Ask the agent, then check its work
 
+> **Disclaimer:** all data in this lab is **synthetic and for demonstration only**. Company names (for example
+> Albemarle Corp, BYD Battery or Queensland Minerals) are used for illustration. The vendors, purchase orders,
+> trade records, contracts, risk scores and predicted links are invented and **don't describe any real
+> company, relationship or risk**. Don't use them for business decisions.
+
 > **Risk numbers live in tables. Obligations live in contracts. Your team usually needs both, and gets them from
 > two different people a week apart.** Ask this agent *"which hidden supplier should worry us most, and what does
 > our contract with them say about force majeure?"* and you get one answer in seconds.

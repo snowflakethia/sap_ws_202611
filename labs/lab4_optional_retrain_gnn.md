@@ -1,5 +1,10 @@
 # Lab 4 (optional) - Retrain the GNN
 
+> **Disclaimer:** all data in this lab is **synthetic and for demonstration only**. Company names (for example
+> Albemarle Corp, BYD Battery or Queensland Minerals) are used for illustration. The vendors, purchase orders,
+> trade records, contracts, risk scores and predicted links are invented and **don't describe any real
+> company, relationship or risk**. Don't use them for business decisions.
+
 **Goal:** run the notebook that produced the prediction tables, and see how the risk scores are computed.
 **Time:** 45-60 minutes (package install and CPU training). **Cost:** uses compute pool `DEMO_19865_POOL`
 (CPU_X64_M, 1 node), which suspends itself after 10 minutes idle.

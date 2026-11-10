@@ -1,5 +1,10 @@
 # Lab 4 (optional) - Retrain the GNN: where do the risk scores come from?
 
+> **Disclaimer:** all data in this lab is **synthetic and for demonstration only**. Company names (for example
+> Albemarle Corp, BYD Battery or Queensland Minerals) are used for illustration. The vendors, purchase orders,
+> trade records, contracts, risk scores and predicted links are invented and **don't describe any real
+> company, relationship or risk**. Don't use them for business decisions.
+
 > **Every number the agent gave you came from a model that learned the shape of your supply network.** Not a
 > spreadsheet, not a rule. A **graph neural network** looked at suppliers, parts, regions and shipments as one
 > connected graph, and learned which links *should* exist but aren't recorded. In this lab you run that model
