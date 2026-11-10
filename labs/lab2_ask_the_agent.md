@@ -10,6 +10,12 @@
 semantic view) with unstructured contracts (Cortex Search).
 **Time:** 20 minutes. **Where:** Snowsight > AI > Agent Studio > Agents tab > `GNN_SUPPLY_RISK_AGENT`.
 
+> [!TIP]
+> **Key takeaway: one agent answers questions over numbers and contracts together, and every answer can be checked.**
+> - **Cortex Analyst** turns questions into SQL over the semantic view; **Cortex Search** finds the relevant contract passages.
+> - A **verified query** (question 2) means the answer was built from SQL a person approved in advance.
+> - Don't trust the text alone: open the response details and read **the SQL and the sources** behind it.
+
 ## Questions to ask
 
 | # | Question | Tool you should see used | What a good answer contains |
