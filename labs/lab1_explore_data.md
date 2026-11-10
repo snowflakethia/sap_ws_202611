@@ -6,6 +6,12 @@
 > trade records, contracts, risk scores and predicted links are invented and **don't describe any real
 > company, relationship or risk**. Don't use them for business decisions.
 
+> [!TIP]
+> **Key takeaway: SAP shows you your Tier 1 suppliers; external trade data plus a GNN reveal the hidden Tier 2 links behind them.**
+> - The SAP data products are queried **in place, under their SAP names** (quoted, lowercase), exactly as SAP BDC publishes them.
+> - The trade data (bills of lading) names suppliers that **aren't in the SAP vendor master at all**.
+> - The GNN turns SAP + external signals into **risk scores and predicted links**: 2 CRITICAL suppliers, both in Australia.
+
 > **Your SAP vendor master lists 50 suppliers. Two companies that aren't in it at all each sit behind 48 of them.**
 > If *Tokyo Chemical Works* or *Bavaria Specialty Metals* stopped shipping, almost your entire supply base
 > would feel it, and nothing in your ERP would have warned you. In this lab you'll find them yourself, using
@@ -190,4 +196,4 @@ Mines** (47). All three are `EXTERNAL_SUPPLIER`: they came from trade data, not 
 3. Tokyo Chemical Works isn't in your vendor master. Who in your organisation would need to know about it, and
    what could they do?
 
-**Next:** [Lab 2 - Ask the agent](LAB2_ask_the_agent.md). You'll get the same insights by asking in plain English.
+**Next:** [Lab 2 - Ask the agent](lab2_ask_the_agent.md). You'll get the same insights by asking in plain English.
