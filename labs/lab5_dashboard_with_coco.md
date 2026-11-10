@@ -21,6 +21,7 @@
 **Time:** 45-60 minutes (10-20 of them are CoCo building the app). **Before you start:**
 `snowsight/08_readiness_check.sql` must say READY, including the row **Cortex cross-region inference = ANY_REGION**
 (set in Stage 1, so CoCo can use a region where its models are available).
+Labs 1 to 3 help you read the dashboard, but they aren't required: Lab 5 only needs the setup.
 
 ---
 
