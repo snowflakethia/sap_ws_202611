@@ -217,9 +217,12 @@ When every stage has passed, the environment is ready for the trainee.
 | Lab | File | Time |
 | --- | --- | --- |
 | 1 Explore the data | [labs/lab1_explore_data.md](../labs/lab1_explore_data.md) | 15 min |
-| 2 Ask the agent | [labs/lab2_ask_the_agent.md](../labs/lab2_ask_the_agent.md) | 20 min |
+| 2 Ask the agent | [labs/lab2_ask_the_agent.md](../labs/lab2_ask_the_agent.md) | 25 min |
 | 3 Build your own agent | [labs/lab3_build_your_own_agent.md](../labs/lab3_build_your_own_agent.md) (solution: `lab3_solution_my_agent.sql`) | 20 min |
 | 4 Retrain the GNN (optional) | [labs/lab4_optional_retrain_gnn.md](../labs/lab4_optional_retrain_gnn.md) | 45-60 min |
+| 5 Dashboard with one prompt (optional) | [labs/lab5_dashboard_with_coco.md](../labs/lab5_dashboard_with_coco.md) (fallback: `snow sql -c <connection> -f snowsight/07_lab5_dashboard.sql`) | 45-60 min |
+
+The labs are written for Snowsight. They work the same whether the environment was deployed with the CLI or in Snowsight.
 
 ---
 

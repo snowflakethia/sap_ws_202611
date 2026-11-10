@@ -125,11 +125,11 @@ the readiness check again.
 
 | Lab | File | Time | What you'll do |
 | --- | --- | --- | --- |
-| 1 | [labs/LAB1_explore_data.md](labs/LAB1_explore_data.md) | 15 min | Look at the SAP data, external signals and GNN results with SQL |
-| 2 | [labs/LAB2_ask_the_agent.md](labs/LAB2_ask_the_agent.md) | 20 min | Ask the agent 5 questions and see which tool answers each one |
-| 3 | [labs/LAB3_build_your_own_agent.md](labs/LAB3_build_your_own_agent.md) | 20 min | Build your own agent in the Snowsight UI |
-| 4 (optional) | [labs/LAB4_optional_retrain_gnn.md](labs/LAB4_optional_retrain_gnn.md) | 45-60 min | Re-run the GNN notebook. **Not possible on trial accounts** |
-| 5 (optional) | [labs/LAB5_dashboard_with_coco.md](labs/LAB5_dashboard_with_coco.md) | 45-60 min | Build a 7-page dashboard with one CoCo prompt. Fallback: `07_lab5_dashboard.sql` |
+| 1 | [labs/lab1_explore_data.md](../labs/lab1_explore_data.md) | 15 min | Look at the SAP data, external signals and GNN results with SQL |
+| 2 | [labs/lab2_ask_the_agent.md](../labs/lab2_ask_the_agent.md) | 25 min | Ask the agent 5 questions, then read its traces: the SQL it ran and the contracts it read |
+| 3 | [labs/lab3_build_your_own_agent.md](../labs/lab3_build_your_own_agent.md) | 20 min | Build your own agent in the Snowsight UI |
+| 4 (optional) | [labs/lab4_optional_retrain_gnn.md](../labs/lab4_optional_retrain_gnn.md) | 45-60 min | Re-run the GNN notebook. **Not possible on trial accounts** |
+| 5 (optional) | [labs/lab5_dashboard_with_coco.md](../labs/lab5_dashboard_with_coco.md) | 45-60 min | Build a 7-page dashboard with one CoCo prompt. Fallback: `07_lab5_dashboard.sql` |
 
 ---
 

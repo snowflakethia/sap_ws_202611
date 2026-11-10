@@ -361,7 +361,7 @@ Read-only; you can run it at any time.
 If it says **NOT READY**, look at the first FAIL row and run the file named in its **FIX** column.
 Then run Step 9 again.
 
-**You're ready. Start with [Lab 1](snowsight/labs/LAB1_explore_data.md).**
+**You're ready. Start with [Lab 1](labs/lab1_explore_data.md).**
 
 ---
 
@@ -369,11 +369,11 @@ Then run Step 9 again.
 
 | Lab | Time | What you'll learn |
 | --- | --- | --- |
-| [1. Explore the data](snowsight/labs/LAB1_explore_data.md) | 15 min | Query the SAP data products alongside the external signals, and read the GNN's risk scores and predicted hidden links. Why are the 2 CRITICAL suppliers both in Australia? |
-| [2. Ask the agent](snowsight/labs/LAB2_ask_the_agent.md) | 25 min | Ask 5 questions, then open the agent's **traces** to see the SQL it ran, whether it used verified SQL, and the contract passages it read. Run the agent's contract search yourself |
-| [3. Build your own agent](snowsight/labs/LAB3_build_your_own_agent.md) | 20 min | Build an agent from scratch in Agent Studio, then compare it with the tuned one to see what orchestration instructions add |
-| [4. Retrain the GNN](snowsight/labs/LAB4_optional_retrain_gnn.md) (optional) | 45-60 min | Run the PyTorch Geometric notebook on Snowpark Container Services and produce your own risk scores. *Needs a non-trial account (internet access for Python packages)* |
-| [5. Build a dashboard with one prompt](snowsight/labs/LAB5_dashboard_with_coco.md) (optional) | 45-60 min | One prompt to **Cortex Code (CoCo)** builds a 7-page Streamlit dashboard over 5 databases: spend at risk, hidden Tier 2 bottlenecks, BOM exposure, contract search, plus business and technical architecture pages. Use the pattern for design-thinking prototypes |
+| [1. Explore the data](labs/lab1_explore_data.md) | 15 min | Query the SAP data products alongside the external signals, and read the GNN's risk scores and predicted hidden links. Why are the 2 CRITICAL suppliers both in Australia? |
+| [2. Ask the agent](labs/lab2_ask_the_agent.md) | 25 min | Ask 5 questions, then open the agent's **traces** to see the SQL it ran, whether it used verified SQL, and the contract passages it read. Run the agent's contract search yourself |
+| [3. Build your own agent](labs/lab3_build_your_own_agent.md) | 20 min | Build an agent from scratch in Agent Studio, then compare it with the tuned one to see what orchestration instructions add |
+| [4. Retrain the GNN](labs/lab4_optional_retrain_gnn.md) (optional) | 45-60 min | Run the PyTorch Geometric notebook on Snowpark Container Services and produce your own risk scores. *Needs a non-trial account (internet access for Python packages)* |
+| [5. Build a dashboard with one prompt](labs/lab5_dashboard_with_coco.md) (optional) | 45-60 min | One prompt to **Cortex Code (CoCo)** builds a 7-page Streamlit dashboard over 5 databases: spend at risk, hidden Tier 2 bottlenecks, BOM exposure, contract search, plus business and technical architecture pages. Use the pattern for design-thinking prototypes |
 
 ---
 
@@ -417,11 +417,11 @@ More: [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
 
 | Folder | Contents |
 | --- | --- |
-| `snowsight/` | The setup files to run in Snowsight, readiness check, removal script, labs |
+| `snowsight/` | The setup files to run in Snowsight, readiness check, removal script, Lab 5 reference app (`snowsight/lab5/`) |
 | `sql/` | Deployment and validation SQL, shared by the Snowsight and CLI paths |
 | `data/` | CSV snapshots of the SAP data products and demo tables, plus `manifest.csv` (row counts and checksums) |
 | `workspace/` | The GNN notebook, the SAP BDC publish notebook, and reference SQL |
-| `labs/` | CLI-path lab guides and the lab 3 SQL solution |
+| `labs/` | **All 5 lab guides** (one set for every trainee) and the Lab 3 SQL solution |
 | `scripts/`, `config/` | CLI deployment scripts and defaults |
 | `docs/` | Trainer guides |
 

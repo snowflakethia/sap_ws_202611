@@ -121,7 +121,7 @@ BEGIN
     actual := (SELECT COUNT(*)::VARCHAR FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())));
   EXCEPTION WHEN OTHER THEN actual := '0';
   END;
-  rows_sql := rows_sql || ' UNION ALL SELECT 11, ''Lab 5 dashboard SUPPLY_RISK_DASHBOARD (optional)'', ''created in Lab 5'', ''' || actual || ''', ''INFO'', ''snowsight/labs/LAB5_dashboard_with_coco.md''';
+  rows_sql := rows_sql || ' UNION ALL SELECT 11, ''Lab 5 dashboard SUPPLY_RISK_DASHBOARD (optional)'', ''created in Lab 5'', ''' || actual || ''', ''INFO'', ''labs/lab5_dashboard_with_coco.md''';
 
   -- 11. Git workspace: private to the user and not visible to SQL - confirmed by the trainee in the UI.
   rows_sql := rows_sql || ' UNION ALL SELECT 12, ''Git workspace gnn_training (check in the UI)'', ''visible in Projects > Workspaces'', ''-'', ''INFO'', ''00b_create_git_workspace.md''';
@@ -130,7 +130,7 @@ BEGIN
   rows_sql := 'SELECT 1 AS N, ''OVERALL'' AS CHECK_NAME, ''READY'' AS EXPECTED, '''
            || IFF(fails = 0, 'READY', 'NOT READY') || ''' AS ACTUAL, '''
            || IFF(fails = 0, 'PASS - you can start the labs', 'FAIL - ' || fails || ' check(s) failed') || ''' AS RESULT, '''
-           || IFF(fails = 0, 'Start with snowsight/labs/LAB1_explore_data.md', 'Re-run the file in the FIX column of the first FAIL row') || ''' AS FIX'
+           || IFF(fails = 0, 'Start with labs/lab1_explore_data.md', 'Re-run the file in the FIX column of the first FAIL row') || ''' AS FIX'
            || rows_sql;
   res := (EXECUTE IMMEDIATE 'SELECT CHECK_NAME, EXPECTED, ACTUAL, RESULT, FIX FROM (' || rows_sql || ') ORDER BY N');
   RETURN TABLE(res);
