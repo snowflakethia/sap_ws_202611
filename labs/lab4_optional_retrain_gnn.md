@@ -12,6 +12,12 @@
 
 The environment already contains precomputed results, so the agent works without this lab.
 
+> [!TIP]
+> **Key takeaway: the risk scores aren't magic; they come from a GNN you can retrain on governed Snowflake data, without exporting it.**
+> - The notebook trains PyTorch Geometric on **Snowpark Container Services**, next to the SAP and external data.
+> - Results are versioned by **`MODEL_VERSION`**, so a new model can be compared with the current one before anyone relies on it.
+> - GNN training starts from random weights, so **scores shift slightly between runs**. That's why model versions matter.
+
 ## Before you start
 - **Not possible on trial accounts.** The notebook installs PyTorch Geometric from PyPI, which needs the
   external access integration `DEMO_19865_PIP_INSTALLATION`. Trial accounts can't create external access
