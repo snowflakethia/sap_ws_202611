@@ -4,7 +4,7 @@ Welcome! In this course you build a supply chain risk demo in your own Snowflake
 explore it in four labs. Everything happens in **Snowsight** (the Snowflake web UI). You don't need to
 install anything.
 
-> **Prefer one page with every click?** Use the step-by-step guide **[../SETUP.md](../SETUP.md)**.
+> **Prefer one page with every click?** Use the step-by-step guide in the main **[README](../README.md#setup-browser-only-about-30-minutes)**.
 
 **What you'll build:**
 - SAP S/4HANA supplier and material data.
