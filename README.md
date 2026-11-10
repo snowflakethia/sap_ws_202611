@@ -283,7 +283,8 @@ For Steps 3-9, repeat these five actions:
    Every row in the **RESULT** column must read **PASS**. **INFO** is fine where noted.
 
 ### Step 3 - Account objects: `snowsight/01_stage1_account.sql`
-Creates the course role, warehouse, compute pool and project database. About 1 minute.
+Creates the course role, warehouse, compute pool and project database, and enables **Cortex cross-region
+inference** so CoCo, Cortex Agents and Cortex Analyst can route to a region with the required models. About 1 minute.
 
 **Checkpoint 3**
 
@@ -294,6 +295,7 @@ Creates the course role, warehouse, compute pool and project database. About 1 m
 | S1-A compute pool family/nodes | `CPU_X64_M/1-1` | PASS |
 | S1-B integrations | `DEMO_19865_PIP_INSTALLATION:true`, or `none` | PASS, or **INFO** on a trial account (that's expected) |
 | S1-C key grants to DEMO_19865_ROLE | `4`, or `3` on a trial account | PASS |
+| S1-D Cortex cross-region inference (CoCo, agents) | `ANY_REGION` | PASS |
 
 ### Step 4 - SAP data products: `snowsight/02_stage2_sap_data.sql`
 Creates the 4 SAP data product databases and loads them. About 1 minute.
@@ -353,7 +355,8 @@ Read-only; you can run it at any time.
 
 **Checkpoint 9:**
 - The first row reads **`OVERALL | READY | PASS - you can start the labs`**.
-- Then 8 PASS rows, and 1 INFO row for the workspace, which you already checked in Step 2.
+- Then 9 PASS rows (including **Cortex cross-region inference = ANY_REGION**, which lets CoCo and the agent use a
+  region with the required models), and 2 INFO rows: the optional Lab 5 dashboard and the workspace you checked in Step 2.
 
 If it says **NOT READY**, look at the first FAIL row and run the file named in its **FIX** column.
 Then run Step 9 again.
@@ -370,6 +373,7 @@ Then run Step 9 again.
 | [2. Ask the agent](snowsight/labs/LAB2_ask_the_agent.md) | 25 min | Ask 5 questions, then open the agent's **traces** to see the SQL it ran, whether it used verified SQL, and the contract passages it read. Run the agent's contract search yourself |
 | [3. Build your own agent](snowsight/labs/LAB3_build_your_own_agent.md) | 20 min | Build an agent from scratch in Agent Studio, then compare it with the tuned one to see what orchestration instructions add |
 | [4. Retrain the GNN](snowsight/labs/LAB4_optional_retrain_gnn.md) (optional) | 45-60 min | Run the PyTorch Geometric notebook on Snowpark Container Services and produce your own risk scores. *Needs a non-trial account (internet access for Python packages)* |
+| [5. Build a dashboard with one prompt](snowsight/labs/LAB5_dashboard_with_coco.md) (optional) | 45-60 min | One prompt to **Cortex Code (CoCo)** builds a 7-page Streamlit dashboard over 5 databases: spend at risk, hidden Tier 2 bottlenecks, BOM exposure, contract search, plus business and technical architecture pages. Use the pattern for design-thinking prototypes |
 
 ---
 

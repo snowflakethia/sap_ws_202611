@@ -62,6 +62,7 @@ From now on, open each file **inside `gnn_training`**, then select **Run All** w
 | S1-A compute pool family/nodes | CPU_X64_M/1-1 | PASS |
 | S1-B integrations | `DEMO_19865_PIP_INSTALLATION:true`, or `none` on a **trial** account | PASS, or **INFO** on trial (expected) |
 | S1-C key grants to DEMO_19865_ROLE | 4 (3 on trial) | PASS |
+| S1-D Cortex cross-region inference (CoCo, agents) | ANY_REGION | PASS |
 
 ### Stage 2 - SAP data: `snowsight/02_stage2_sap_data.sql` (about 1 minute)
 **CHECKPOINT 2 - expected last result:** every row PASS.
@@ -111,8 +112,9 @@ If the search row shows **WAIT**, wait one minute and run the file again.
 ### Step 7 - Am I ready? `snowsight/08_readiness_check.sql`
 Run it any time; it changes nothing.
 
-**Expected:** the first row reads **`OVERALL | READY | PASS - you can start the labs`**, followed by 8 PASS rows
-and 1 INFO row (the workspace, which you already checked).
+**Expected:** the first row reads **`OVERALL | READY | PASS - you can start the labs`**, followed by 9 PASS rows
+(including Cortex cross-region inference = ANY_REGION) and 2 INFO rows (the optional Lab 5 dashboard, and the
+workspace, which you already checked).
 
 If it says **NOT READY**, find the first FAIL row and re-run the file named in its **FIX** column. Then run
 the readiness check again.
@@ -127,6 +129,7 @@ the readiness check again.
 | 2 | [labs/LAB2_ask_the_agent.md](labs/LAB2_ask_the_agent.md) | 20 min | Ask the agent 5 questions and see which tool answers each one |
 | 3 | [labs/LAB3_build_your_own_agent.md](labs/LAB3_build_your_own_agent.md) | 20 min | Build your own agent in the Snowsight UI |
 | 4 (optional) | [labs/LAB4_optional_retrain_gnn.md](labs/LAB4_optional_retrain_gnn.md) | 45-60 min | Re-run the GNN notebook. **Not possible on trial accounts** |
+| 5 (optional) | [labs/LAB5_dashboard_with_coco.md](labs/LAB5_dashboard_with_coco.md) | 45-60 min | Build a 7-page dashboard with one CoCo prompt. Fallback: `07_lab5_dashboard.sql` |
 
 ---
 

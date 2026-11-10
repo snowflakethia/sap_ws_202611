@@ -11,6 +11,7 @@
 --   S1-B integrations                         DEMO_19865_PIP_INSTALLATION:true -> PASS
 --                                             or "none" -> INFO on TRIAL accounts (expected)
 --   S1-C key grants to DEMO_19865_ROLE        4 (or 3 on trial accounts) PASS
+--   S1-D Cortex cross-region inference        ANY_REGION                 PASS
 -- =============================================================================
 USE ROLE ACCOUNTADMIN;
 ALTER GIT REPOSITORY TRAINING_KIT_REPO.PUBLIC.GNN_KIT FETCH;

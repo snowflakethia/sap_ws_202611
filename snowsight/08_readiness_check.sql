@@ -5,9 +5,9 @@
 --
 -- Expected result (last statement):
 --   OVERALL   READY   PASS - you can start the labs
---   ... 8 PASS rows (Git repository, warehouse, SAP rows 219, demo rows 648, VW_RISK_SUMMARY,
---       Cortex Search ACTIVE/ACTIVE, semantic view 2 CRITICAL suppliers, agent 1)
---   ... 1 INFO row (Git workspace - confirm in the UI)
+--   ... 9 PASS rows (Git repository, warehouse, SAP rows 219, demo rows 648, VW_RISK_SUMMARY,
+--       Cortex Search ACTIVE/ACTIVE, semantic view 2 CRITICAL suppliers, agent 1, cross-region ANY_REGION)
+--   ... 2 INFO rows (optional Lab 5 dashboard; Git workspace - confirm in the UI)
 -- If OVERALL is NOT READY: re-run the file named in the FIX column of the first FAIL row,
 -- then run this check again.
 -- =============================================================================

@@ -109,3 +109,5 @@ table that a version filter couldn't.
    business users?
 3. The notebook ran next to the data instead of exporting it to a laptop. What does that mean for governance and
    for SAP data in particular?
+
+**Next (optional):** [Lab 5 - Build a dashboard with one prompt](LAB5_dashboard_with_coco.md). Turn everything you have seen into an app for the business.
