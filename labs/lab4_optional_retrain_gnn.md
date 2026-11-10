@@ -6,6 +6,12 @@
 > trade records, contracts, risk scores and predicted links are invented and **don't describe any real
 > company, relationship or risk**. Don't use them for business decisions.
 
+> [!TIP]
+> **Key takeaway: the risk scores aren't magic; they come from a GNN you can retrain on governed Snowflake data, without exporting it.**
+> - The notebook trains PyTorch Geometric on **Snowpark Container Services**, next to the SAP and external data.
+> - Results are versioned by **`MODEL_VERSION`**, so a new model can be compared with the current one before anyone relies on it.
+> - GNN training starts from random weights, so **scores shift slightly between runs**. That's why model versions matter.
+
 > **Every number the agent gave you came from a model that learned the shape of your supply network.** Not a
 > spreadsheet, not a rule. A **graph neural network** looked at suppliers, parts, regions and shipments as one
 > connected graph, and learned which links *should* exist but aren't recorded. In this lab you run that model
@@ -110,4 +116,4 @@ table that a version filter couldn't.
 3. The notebook ran next to the data instead of exporting it to a laptop. What does that mean for governance and
    for SAP data in particular?
 
-**Next (optional):** [Lab 5 - Build a dashboard with one prompt](LAB5_dashboard_with_coco.md). Turn everything you have seen into an app for the business.
+**Next (optional):** [Lab 5 - Build a dashboard with one prompt](lab5_dashboard_with_coco.md). Turn everything you have seen into an app for the business.
