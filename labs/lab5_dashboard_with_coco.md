@@ -66,11 +66,29 @@ Build and deploy a Streamlit in Snowflake app for supply chain and procurement l
 APP
 - Name: DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.SUPPLY_RISK_DASHBOARD, title "Supply Chain Risk Dashboard".
 - Create it as role DEMO_19865_ROLE (USE ROLE DEMO_19865_ROLE), query warehouse DEMO_19865_WH.
-- Single file streamlit_app.py. Use only streamlit, pandas, altair and snowflake.snowpark (get_active_session).
+- RUNTIME (important): use the WAREHOUSE runtime, not the container runtime. Create the app with
+  RUNTIME_NAME = 'SYSTEM$WAREHOUSE_RUNTIME' and QUERY_WAREHOUSE = DEMO_19865_WH, and no COMPUTE_POOL.
+  Do NOT create pyproject.toml or requirements.txt. Next to streamlit_app.py, add exactly this environment.yml:
+    name: app_environment
+    channels:
+      - snowflake
+    dependencies:
+      - python=3.11
+      - streamlit=1.50.0
+      - pandas
+      - altair
+      - snowflake-snowpark-python
+- Two files only: streamlit_app.py and environment.yml. Import only streamlit, pandas, altair, json and
+  snowflake.snowpark (session = get_active_session()). No other packages: use st.graphviz_chart with a DOT
+  string (no graphviz Python package), st.map and altair charts.
 - Read-only: SELECT queries only. Cache query results with st.cache_data.
 - Sidebar radio for navigation between 7 pages. On every page show st.warning: "Synthetic data, for
   demonstration only. Company names are used for illustration; no real company, relationship or risk is described."
-- Test every SQL query before deploying. Fix any error yourself, then deploy and give me the app link.
+- Test every SQL query before deploying. Fix any error yourself, then deploy.
+- After deploying, run DESCRIBE STREAMLIT on the app and confirm runtime_name = SYSTEM$WAREHOUSE_RUNTIME. If it
+  isn't, run ALTER STREAMLIT DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.SUPPLY_RISK_DASHBOARD
+  SET RUNTIME_NAME = 'SYSTEM$WAREHOUSE_RUNTIME'. Then open the app, check it loads without errors, and give me
+  the app link.
 
 DATA (exact names; SAP names are lowercase and must be double-quoted exactly as shown)
 SAP data products (system of record):
@@ -133,6 +151,12 @@ PAGES
 the app and returns a link. Approve its steps when asked. It typically takes **10-20 minutes**. While you wait,
 read Step 4.
 
+> **Why the prompt names the runtime:** Streamlit in Snowflake has two runtimes. New apps default to the
+> **container runtime**, which needs a compute pool and installs packages from PyPI using `pyproject.toml` or
+> `requirements.txt` (and a package repository). The **warehouse runtime** runs on your warehouse and takes
+> packages from the Snowflake Anaconda channel through `environment.yml`, so everything this app needs is
+> available with no extra setup. Naming the runtime and the exact `environment.yml` removes the guesswork.
+
 > **Why the prompt is so specific:** exact object names, columns, pages and rules leave CoCo nothing to guess. The
 > same prompt then gives similar apps for every trainee. That's what *zero-shot* means here: no back-and-forth needed.
 
@@ -150,13 +174,15 @@ should show `1`.
 | If you see | Do this |
 | --- | --- |
 | A KPI doesn't match the table | Ask CoCo: *"The spend at risk should be $18.6M. Check the join between POS and VW_SUPPLIER_RISK and fix it."* |
+| *Installing dependencies failed because the pyproject.toml file does not exist* (and a **Start** button at the top) | The app was created on the **container runtime**, which needs a compute pool and a `pyproject.toml`. Switch it to the warehouse runtime the prompt asks for: run `ALTER STREAMLIT DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.SUPPLY_RISK_DASHBOARD SET RUNTIME_NAME = 'SYSTEM$WAREHOUSE_RUNTIME';` as ACCOUNTADMIN, then reload the app. Or ask CoCo: *"Move this app to the warehouse runtime with an environment.yml, as in my original prompt."* |
 | A page shows a red error | Paste the error into CoCo and ask it to fix the page and redeploy |
 | CoCo says a model or feature isn't available | Check the readiness row **Cortex cross-region inference = ANY_REGION**. If it's missing, re-run `snowsight/01_stage1_account.sql` |
 | No time, or CoCo isn't available | Use the fallback below |
 
 **Fallback (2 minutes):** in `gnn_training`, open `snowsight/07_lab5_dashboard.sql`, set role **ACCOUNTADMIN**
 and **Run All**. It deploys the tested reference app from the course repository (`labs/lab5_app/streamlit_app.py`),
-with the same name and the same pages. Expected: **2 rows, both PASS**.
+with the same name and the same pages, on the warehouse runtime. Expected: **3 rows, all PASS**.
+Note: it **replaces** an app with the same name, including one CoCo built.
 
 ## Step 4 - Look behind the app
 Open the app's code: in the app, click **Edit** (top-right). Or ask CoCo to *"show me the code of
