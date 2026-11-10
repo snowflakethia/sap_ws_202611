@@ -178,6 +178,89 @@ majeure include **SC-2023-001** (Cobalt Supply Agreement), **SC-2023-008** (Grap
 Compare the Results with the written answer: every contract the agent mentions should appear in the Results. That's
 RAG working as intended. The answer is grounded in your documents, not in the LLM's memory.
 
+#### Look behind Q3: where do the contracts live, and how does Snowflake read them?
+
+**The documents.** The 12 supplier contracts are full legal text: parties, recitals, numbered clauses, about
+2,500 to 4,200 characters each. They're stored in an ordinary Snowflake table, one contract per row:
+
+| What | Where |
+| --- | --- |
+| Table | `DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.CUSTOMER_CONTRACTS` |
+| The document text | Column **`CONTRACT_TEXT`** |
+| Labels next to it | `CONTRACT_ID`, `CONTRACT_TITLE`, `SUPPLIER_NAME`, `BUYER_NAME`, `MATERIAL_TYPE`, `ANNUAL_VALUE_USD`, ... |
+| Search index over the text | `CONTRACT_SEARCH_SERVICE` (Cortex Search), refreshed every hour |
+| Where it was loaded from | `data/demo/customer_contracts.csv` in this kit's GitHub repo (stage 4) |
+
+Nothing in that text is a field. There is no "force majeure" column, and no SQL `WHERE` clause that can find
+"the clause about what happens if a mine floods". That's what *unstructured* means, and it's the problem Cortex Search
+solves.
+
+**Try 1: read a contract yourself.** Go to **Catalog > Database Explorer > DEMO_19865_DB > GNN_SUPPLY_CHAIN_RISK >
+Tables > CUSTOMER_CONTRACTS**, open **Data Preview**, and click a `CONTRACT_TEXT` cell. Or run this in a SQL file:
+
+```sql
+SELECT CONTRACT_ID, CONTRACT_TITLE, SUPPLIER_NAME, CONTRACT_TEXT
+FROM DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.CUSTOMER_CONTRACTS
+WHERE CONTRACT_ID = 'SC-2023-001';
+```
+
+**What it does:** shows the first contract the agent retrieved in Q3, in full.
+**Why:** it's the same document the agent quoted, so you can check the agent's summary against the original.
+
+**Try 2: run the agent's search yourself.** This sends the same search as the Q3 trace (*force majeure clause*,
+4 results):
+
+```sql
+SELECT r.value:CONTRACT_ID::STRING    AS contract_id,
+       r.value:CONTRACT_TITLE::STRING AS contract_title
+FROM TABLE(FLATTEN(PARSE_JSON(SNOWFLAKE.CORTEX.SEARCH_PREVIEW(
+       'DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.CONTRACT_SEARCH_SERVICE',
+       '{"query": "force majeure clause", "columns": ["CONTRACT_ID", "CONTRACT_TITLE"], "limit": 4}'
+     )):results)) r;
+```
+
+**What it does:** `SEARCH_PREVIEW` queries the search service from SQL. It returns JSON, and `FLATTEN` turns the
+results into one row each.
+**Expected:** 4 rows: **SC-2023-001** Cobalt Supply Agreement, **SC-2023-012** Emergency Supply and Remediation,
+**SC-2023-008** Graphite Products Supply, **SC-2023-002** Lithium Supply Agreement. These are the same passages the
+agent read before writing its answer.
+
+**Try 3: keywords vs meaning.** Ask a question the way a person would, using words the contracts never use:
+
+```sql
+-- Keyword search: does any contract contain the words "walk away"?
+SELECT COUNT(*) AS keyword_matches
+FROM DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.CUSTOMER_CONTRACTS
+WHERE CONTRACT_TEXT ILIKE '%walk away%';
+
+-- Cortex Search: same question, by meaning
+SELECT r.value:CONTRACT_ID::STRING    AS contract_id,
+       r.value:CONTRACT_TITLE::STRING AS contract_title
+FROM TABLE(FLATTEN(PARSE_JSON(SNOWFLAKE.CORTEX.SEARCH_PREVIEW(
+       'DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.CONTRACT_SEARCH_SERVICE',
+       '{"query": "can we walk away from the agreement early", "columns": ["CONTRACT_ID", "CONTRACT_TITLE"], "limit": 3}'
+     )):results)) r;
+```
+
+**Expected:** the keyword query finds **0** contracts. Cortex Search still returns results, and in our test the top
+one was **SC-2023-001**, whose section *8. TERM AND TERMINATION* is exactly what the question is about. It
+understood that "walk away early" means *termination*, a word you never typed. (The ranking can vary slightly between
+accounts, but the keyword count is always 0.)
+
+**What Snowflake did for you.** One `CREATE CORTEX SEARCH SERVICE ... ON CONTRACT_TEXT` statement
+(`sql/stage5_ai_services/50_search_service.sql`) was enough to:
+- turn every contract into a searchable index of meaning (vector embeddings) as well as words, with no embedding
+  model, vector database or search cluster to run yourself;
+- keep it fresh: new or changed contracts are re-indexed automatically (`TARGET_LAG = '1 hour'`);
+- keep it governed: the documents never leave Snowflake, and only roles granted access to the service can search it;
+- return each passage with its `CONTRACT_ID` and `CONTRACT_TITLE`, so the agent can **cite its sources**.
+
+> **In a real SAP BDC project,** contracts usually arrive as **PDF or scanned files**, not text. You'd upload them to
+> a Snowflake stage, extract the text with **`AI_PARSE_DOCUMENT`** (which also reads scanned pages and tables) into a
+> table like `CUSTOMER_CONTRACTS`, then create the same search service on top. This kit skips the PDF step and ships
+> the extracted text, so setup takes minutes, but everything from the table onwards works exactly as it would in
+> production.
+
 ### Q4. *Which external suppliers have the strongest predicted hidden links to our suppliers, and what do our contracts with them say about force majeure?*
 **Why this question:** it needs a number (the GNN's predicted links, from `VW_HIDDEN_DEPENDENCIES`) **and**
 a document (the contract), joined by **supplier name**. This is the agent's real value: one question,
