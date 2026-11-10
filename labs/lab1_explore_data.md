@@ -17,6 +17,12 @@ USE WAREHOUSE DEMO_19865_WH;
 USE SCHEMA DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK;
 ```
 
+> [!TIP]
+> **Key takeaway: SAP shows you your Tier 1 suppliers; external trade data plus a GNN reveal the hidden Tier 2 links behind them.**
+> - The SAP data products are queried **in place, under their SAP names** (quoted, lowercase), exactly as SAP BDC publishes them.
+> - The trade data (bills of lading) names suppliers that **aren't in the SAP vendor master at all**.
+> - The GNN turns SAP + external signals into **risk scores and predicted links**: 2 CRITICAL suppliers, both in Australia.
+
 ## 1. The SAP data products (snapshot)
 
 The four SAP S/4HANA data products are read-only tables. In the original environment they are
