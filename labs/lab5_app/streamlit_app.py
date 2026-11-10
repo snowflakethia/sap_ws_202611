@@ -7,10 +7,14 @@ import json
 import altair as alt
 import pandas as pd
 import streamlit as st
-from snowflake.snowpark.context import get_active_session
 
 st.set_page_config(page_title="Supply Chain Risk Dashboard", layout="wide")
-session = get_active_session()
+# Works on both runtimes: st.connection on the container runtime, get_active_session on the warehouse runtime.
+try:
+    session = st.connection("snowflake").session()
+except Exception:
+    from snowflake.snowpark.context import get_active_session
+    session = get_active_session()
 
 DEMO = "DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK"
 VENDORS = 'S4_ZVENDORINFO_DP_DELTA_SHARING_V1."s4_zvendorinfo_dp_srv:v1"."s4custom_vendors"'
