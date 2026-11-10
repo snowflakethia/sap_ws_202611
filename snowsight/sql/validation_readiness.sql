@@ -105,8 +105,26 @@ BEGIN
   rows_sql := rows_sql || ' UNION ALL SELECT 9, ''Agent GNN_SUPPLY_RISK_AGENT'', ''1'', ''' || actual || ''', '''
            || IFF(actual = '1', 'PASS', 'FAIL') || ''', ''06_stage6_agent.sql''';
 
-  -- 9. Git workspace: private to the user and not visible to SQL - confirmed by the trainee in the UI.
-  rows_sql := rows_sql || ' UNION ALL SELECT 10, ''Git workspace gnn_training (check in the UI)'', ''visible in Projects > Workspaces'', ''-'', ''INFO'', ''00b_create_git_workspace.md''';
+  -- 9. Cortex cross-region inference (Stage 1) - CoCo in Snowsight and the agent need a region with the models
+  BEGIN
+    SHOW PARAMETERS LIKE 'CORTEX_ENABLED_CROSS_REGION' IN ACCOUNT;
+    actual := (SELECT COALESCE(MAX("value"), 'missing') FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())));
+  EXCEPTION WHEN OTHER THEN actual := 'missing';
+  END;
+  IF (actual <> 'ANY_REGION') THEN fails := fails + 1; END IF;
+  rows_sql := rows_sql || ' UNION ALL SELECT 10, ''Cortex cross-region inference (CoCo, agents)'', ''ANY_REGION'', ''' || actual || ''', '''
+           || IFF(actual = 'ANY_REGION', 'PASS', 'FAIL') || ''', ''01_stage1_account.sql''';
+
+  -- 10. Lab 5 dashboard (optional, created during Lab 5) - INFO only, never counts as a failure
+  BEGIN
+    SHOW STREAMLITS LIKE 'SUPPLY_RISK_DASHBOARD' IN SCHEMA DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK;
+    actual := (SELECT COUNT(*)::VARCHAR FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())));
+  EXCEPTION WHEN OTHER THEN actual := '0';
+  END;
+  rows_sql := rows_sql || ' UNION ALL SELECT 11, ''Lab 5 dashboard SUPPLY_RISK_DASHBOARD (optional)'', ''created in Lab 5'', ''' || actual || ''', ''INFO'', ''snowsight/labs/LAB5_dashboard_with_coco.md''';
+
+  -- 11. Git workspace: private to the user and not visible to SQL - confirmed by the trainee in the UI.
+  rows_sql := rows_sql || ' UNION ALL SELECT 12, ''Git workspace gnn_training (check in the UI)'', ''visible in Projects > Workspaces'', ''-'', ''INFO'', ''00b_create_git_workspace.md''';
 
   -- OVERALL row first
   rows_sql := 'SELECT 1 AS N, ''OVERALL'' AS CHECK_NAME, ''READY'' AS EXPECTED, '''

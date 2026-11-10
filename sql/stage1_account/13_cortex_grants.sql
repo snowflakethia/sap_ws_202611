@@ -6,6 +6,10 @@ USE ROLE ACCOUNTADMIN;
 
 GRANT DATABASE ROLE SNOWFLAKE.CORTEX_USER TO ROLE DEMO_19865_ROLE;
 
+-- Let Cortex (CoCo in Snowsight, Cortex Agents, Cortex Analyst, AI functions) route requests to any region
+-- where the required models are available, so the labs work whatever region the trainee account is in.
+ALTER ACCOUNT SET CORTEX_ENABLED_CROSS_REGION = 'ANY_REGION';
+
 SELECT 'Stage 1 complete' AS STATUS,
        'DEMO_19865_ROLE' AS ROLE_NAME,
        'DEMO_19865_WH'   AS WAREHOUSE_NAME,

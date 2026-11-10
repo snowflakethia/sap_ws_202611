@@ -17,6 +17,9 @@ SHOW EXTERNAL ACCESS INTEGRATIONS LIKE 'DEMO_19865_%';
 SET V_EAI = (SELECT COALESCE(NULLIF(LISTAGG("name" || ':' || "enabled", ',') WITHIN GROUP (ORDER BY "name"), ''), 'none')
              FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())));
 
+SHOW PARAMETERS LIKE 'CORTEX_ENABLED_CROSS_REGION' IN ACCOUNT;
+SET V_XREGION = (SELECT MAX("value") FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())));
+
 SHOW GRANTS TO ROLE DEMO_19865_ROLE;
 SET V_GRANTS = (SELECT
       COUNT_IF("privilege" = 'USAGE' AND "granted_on" = 'INTEGRATION' AND "name" = 'DEMO_19865_PIP_INSTALLATION')
@@ -39,4 +42,7 @@ SELECT 'S1-B integrations', 'DEMO_19865_PIP_INSTALLATION:true', $V_EAI,
            IFF($V_EAI = 'none', 'INFO - not created (trial account); only Lab 4 needs it', 'FAIL'))
 UNION ALL
 SELECT 'S1-C key grants to DEMO_19865_ROLE (WH, pool, CORTEX_USER [+ EAI])', IFF($V_EAI = 'none', '3', '4'), $V_GRANTS::VARCHAR,
-       IFF($V_GRANTS = IFF($V_EAI = 'none', 3, 4), 'PASS', 'FAIL');
+       IFF($V_GRANTS = IFF($V_EAI = 'none', 3, 4), 'PASS', 'FAIL')
+UNION ALL
+SELECT 'S1-D Cortex cross-region inference (CoCo, agents)', 'ANY_REGION', $V_XREGION,
+       IFF($V_XREGION = 'ANY_REGION', 'PASS', 'FAIL');
