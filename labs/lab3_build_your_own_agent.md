@@ -6,6 +6,12 @@
 > trade records, contracts, risk scores and predicted links are invented and **don't describe any real
 > company, relationship or risk**. Don't use them for business decisions.
 
+> [!TIP]
+> **Key takeaway: same tools, no orchestration instructions, a weaker agent. The instructions are what make it production-ready.**
+> - An agent is a Snowflake object built from **tools** (semantic view, search service) plus **instructions**.
+> - **Tool descriptions** tell the agent *whether* a tool is relevant; **orchestration instructions** tell it *which, when, in what order*.
+> - Anything you click in the UI can be written as a **`CREATE AGENT ... FROM SPECIFICATION`** script and version-controlled.
+
 > **In Lab 2 the agent seemed to "just know" when to query data and when to read contracts. It doesn't.** That
 > behaviour comes from a few lines of configuration that someone wrote. In this lab you build an agent from the
 > same parts, without those lines, and ask it the same questions. The difference you see is the difference
@@ -168,4 +174,4 @@ DROP AGENT IF EXISTS DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.MY_SUPPLY_RISK_AGENT;
 **What it does:** deletes your agent. `IF EXISTS` means it doesn't fail if the agent was already removed.
 The main agent and all data are untouched.
 
-**Next (optional):** [Lab 4 - Retrain the GNN](LAB4_optional_retrain_gnn.md). See where the risk scores come from.
+**Next (optional):** [Lab 4 - Retrain the GNN](lab4_optional_retrain_gnn.md). See where the risk scores come from.
