@@ -3,3 +3,4 @@ logs/
 connections.txt
 extract/
 .DS_Store
+__pycache__/

@@ -417,11 +417,11 @@ More: [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
 
 | Folder | Contents |
 | --- | --- |
-| `snowsight/` | The setup files to run in Snowsight, readiness check, removal script, Lab 5 reference app (`snowsight/lab5/`) |
+| `snowsight/` | The setup files to run in Snowsight, readiness check, removal script, Lab 5 fallback deploy (`07_lab5_dashboard.sql`) |
 | `sql/` | Deployment and validation SQL, shared by the Snowsight and CLI paths |
 | `data/` | CSV snapshots of the SAP data products and demo tables, plus `manifest.csv` (row counts and checksums) |
 | `workspace/` | The GNN notebook, the SAP BDC publish notebook, and reference SQL |
-| `labs/` | **All 5 lab guides** (one set for every trainee) and the Lab 3 SQL solution |
+| `labs/` | **All 5 lab guides** (one set for every trainee), the Lab 3 SQL solution and the Lab 5 reference app (`labs/lab5_app/`) |
 | `scripts/`, `config/` | CLI deployment scripts and defaults |
 | `docs/` | Trainer guides |
 

@@ -4,7 +4,7 @@
 -- WHEN TO USE: Lab 5 normally builds the dashboard with one prompt in Cortex Code (CoCo). Run this file
 -- instead if CoCo isn't available, or to compare your CoCo-built app with the reference version.
 -- WHAT IT DOES: creates the Streamlit in Snowflake app SUPPLY_RISK_DASHBOARD from
---   snowsight/lab5/streamlit_app.py in the Git repository, owned by DEMO_19865_ROLE.
+--   labs/lab5_app/streamlit_app.py in the Git repository, owned by DEMO_19865_ROLE.
 -- SAFE TO RE-RUN: yes (CREATE OR REPLACE). It replaces an app with the same name, including one built by CoCo.
 -- HOW TO RUN: role ACCOUNTADMIN, Run All.
 -- Expected result (last statement): every RESULT = PASS.
@@ -21,7 +21,7 @@ USE ROLE DEMO_19865_ROLE;
 USE WAREHOUSE DEMO_19865_WH;
 
 CREATE OR REPLACE STREAMLIT DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.SUPPLY_RISK_DASHBOARD
-    FROM '@TRAINING_KIT_REPO.PUBLIC.GNN_KIT/branches/main/snowsight/lab5'
+    FROM '@TRAINING_KIT_REPO.PUBLIC.GNN_KIT/branches/main/labs/lab5_app'
     MAIN_FILE = 'streamlit_app.py'
     QUERY_WAREHOUSE = DEMO_19865_WH
     TITLE = 'Supply Chain Risk Dashboard'
