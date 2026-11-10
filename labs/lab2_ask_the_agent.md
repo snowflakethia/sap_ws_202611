@@ -6,6 +6,12 @@
 > trade records, contracts, risk scores and predicted links are invented and **don't describe any real
 > company, relationship or risk**. Don't use them for business decisions.
 
+> [!TIP]
+> **Key takeaway: one agent answers questions over numbers and contracts together, and every answer can be checked.**
+> - **Cortex Analyst** turns questions into SQL over the semantic view; **Cortex Search** finds the relevant contract passages.
+> - A **verified query** (question 2) means the answer was built from SQL a person approved in advance.
+> - Don't trust the text alone: open **Show Traces** and read **the SQL and the passages** behind every answer.
+
 > **Risk numbers live in tables. Obligations live in contracts. Your team usually needs both, and gets them from
 > two different people a week apart.** Ask this agent *"which hidden supplier should worry us most, and what does
 > our contract with them say about force majeure?"* and you get one answer in seconds.
@@ -357,5 +363,5 @@ fast and cheap. Your numbers will differ from ours, but the input-heavy pattern 
 5. Q5 used about 74,000 input tokens to write fewer than 900. Name two changes to the agent that would cut that
    number without hurting answer quality.
 
-**Next:** [Lab 3 - Build your own agent](LAB3_build_your_own_agent.md). You'll build one like this yourself, and
+**Next:** [Lab 3 - Build your own agent](lab3_build_your_own_agent.md). You'll build one like this yourself, and
 use the same traces to see how its behaviour changes.
