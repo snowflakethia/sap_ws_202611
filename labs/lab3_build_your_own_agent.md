@@ -12,6 +12,12 @@
 In the original environment each trainee built a copy named `GNN_SUPPLY_RISK_AGENT_<userid>`.
 You have your own account, so call yours `MY_SUPPLY_RISK_AGENT`.
 
+> [!TIP]
+> **Key takeaway: same tools, no orchestration instructions, a weaker agent. The instructions are what make it production-ready.**
+> - An agent is a Snowflake object built from **tools** (semantic view, search service) plus **instructions**.
+> - **Tool descriptions** tell the agent *whether* a tool is relevant; **orchestration instructions** tell it *which, when, in what order*.
+> - Anything you click in the UI can be written as a **`CREATE AGENT ... FROM SPECIFICATION`** script and version-controlled.
+
 ## Steps
 
 1. Switch role to `DEMO_19865_ROLE` (top-left role selector).
