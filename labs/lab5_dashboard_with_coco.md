@@ -66,29 +66,45 @@ Build and deploy a Streamlit in Snowflake app for supply chain and procurement l
 APP
 - Name: DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.SUPPLY_RISK_DASHBOARD, title "Supply Chain Risk Dashboard".
 - Create it as role DEMO_19865_ROLE (USE ROLE DEMO_19865_ROLE), query warehouse DEMO_19865_WH.
-- RUNTIME (important): use the WAREHOUSE runtime, not the container runtime. Create the app with
-  RUNTIME_NAME = 'SYSTEM$WAREHOUSE_RUNTIME' and QUERY_WAREHOUSE = DEMO_19865_WH, and no COMPUTE_POOL.
-  Do NOT create pyproject.toml or requirements.txt. Next to streamlit_app.py, add exactly this environment.yml:
-    name: app_environment
-    channels:
-      - snowflake
-    dependencies:
-      - python=3.11
-      - streamlit=1.50.0
-      - pandas
-      - altair
-      - snowflake-snowpark-python
-- Two files only: streamlit_app.py and environment.yml. Import only streamlit, pandas, altair, json and
-  snowflake.snowpark (session = get_active_session()). No other packages: use st.graphviz_chart with a DOT
-  string (no graphviz Python package), st.map and altair charts.
+- NO PACKAGE DOWNLOADS (important). This account has no access to PyPI and no artifact repository, so the app
+  must use only packages that are already installed: streamlit, pandas, altair and Snowpark. Never list any
+  package in pyproject.toml or requirements.txt, and never add an external access integration.
+- Create exactly these three files in the app's folder, so it works on either Streamlit runtime:
+  1) streamlit_app.py
+  2) pyproject.toml (read by the container runtime) with an EMPTY dependency list, exactly:
+       [project]
+       name = "supply-risk-dashboard"
+       version = "0.1.0"
+       requires-python = ">=3.11"
+       dependencies = []
+  3) environment.yml (read by the warehouse runtime), exactly:
+       name: app_environment
+       channels:
+         - snowflake
+       dependencies:
+         - python=3.11
+         - streamlit=1.50.0
+         - pandas
+         - altair
+         - snowflake-snowpark-python
+  Do not create requirements.txt (it would take precedence over pyproject.toml).
+- Prefer the warehouse runtime (RUNTIME_NAME = 'SYSTEM$WAREHOUSE_RUNTIME', no COMPUTE_POOL). If the app ends up
+  on the container runtime, that's fine too, as long as pyproject.toml lists no dependencies.
+- Get the session in a way that works on both runtimes:
+    try:
+        session = st.connection("snowflake").session()
+    except Exception:
+        from snowflake.snowpark.context import get_active_session
+        session = get_active_session()
+- Import only streamlit, pandas, altair, json and snowflake.snowpark. No other packages: use st.graphviz_chart
+  with a DOT string (no graphviz Python package), st.map and altair charts.
 - Read-only: SELECT queries only. Cache query results with st.cache_data.
 - Sidebar radio for navigation between 7 pages. On every page show st.warning: "Synthetic data, for
   demonstration only. Company names are used for illustration; no real company, relationship or risk is described."
 - Test every SQL query before deploying. Fix any error yourself, then deploy.
-- After deploying, run DESCRIBE STREAMLIT on the app and confirm runtime_name = SYSTEM$WAREHOUSE_RUNTIME. If it
-  isn't, run ALTER STREAMLIT DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.SUPPLY_RISK_DASHBOARD
-  SET RUNTIME_NAME = 'SYSTEM$WAREHOUSE_RUNTIME'. Then open the app, check it loads without errors, and give me
-  the app link.
+- After deploying, open the app and check it loads without errors. If it reports a package or dependency error,
+  check the three files above (empty pyproject.toml dependencies, no requirements.txt), fix them and restart the
+  app. Then give me the app link.
 
 DATA (exact names; SAP names are lowercase and must be double-quoted exactly as shown)
 SAP data products (system of record):
@@ -151,11 +167,11 @@ PAGES
 the app and returns a link. Approve its steps when asked. It typically takes **10-20 minutes**. While you wait,
 read Step 4.
 
-> **Why the prompt names the runtime:** Streamlit in Snowflake has two runtimes. New apps default to the
-> **container runtime**, which needs a compute pool and installs packages from PyPI using `pyproject.toml` or
-> `requirements.txt` (and a package repository). The **warehouse runtime** runs on your warehouse and takes
-> packages from the Snowflake Anaconda channel through `environment.yml`, so everything this app needs is
-> available with no extra setup. Naming the runtime and the exact `environment.yml` removes the guesswork.
+> **Why the prompt talks about packages and runtimes:** Streamlit in Snowflake has two runtimes. The
+> **container runtime** (the default for new apps) reads `pyproject.toml` and downloads every package listed in it
+> from PyPI, which a trial account can't reach. The **warehouse runtime** reads `environment.yml` and uses the
+> Snowflake Anaconda channel. This app only needs packages that both runtimes already include, so the prompt asks
+> for an **empty** `pyproject.toml` *and* an `environment.yml`: whichever runtime CoCo uses, nothing is downloaded.
 
 > **Why the prompt is so specific:** exact object names, columns, pages and rules leave CoCo nothing to guess. The
 > same prompt then gives similar apps for every trainee. That's what *zero-shot* means here: no back-and-forth needed.
@@ -174,7 +190,8 @@ should show `1`.
 | If you see | Do this |
 | --- | --- |
 | A KPI doesn't match the table | Ask CoCo: *"The spend at risk should be $18.6M. Check the join between POS and VW_SUPPLIER_RISK and fix it."* |
-| *Installing dependencies failed because the pyproject.toml file does not exist* (and a **Start** button at the top) | The app was created on the **container runtime**, which needs a compute pool and a `pyproject.toml`. Switch it to the warehouse runtime the prompt asks for: run `ALTER STREAMLIT DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.SUPPLY_RISK_DASHBOARD SET RUNTIME_NAME = 'SYSTEM$WAREHOUSE_RUNTIME';` as ACCOUNTADMIN, then reload the app. Or ask CoCo: *"Move this app to the warehouse runtime with an environment.yml, as in my original prompt."* |
+| *Installing dependencies failed because the pyproject.toml file does not exist* | The app is on the **container runtime** and has no `pyproject.toml`. Ask CoCo: *"Add a pyproject.toml with name, version, requires-python >=3.11 and an empty dependencies list, as in my original prompt, then restart the app."* |
+| *Failed to retrieve packages from the package server. Have you enabled External Access Integration (EAI)?* (mentions `pypi.org`) | The app's `pyproject.toml` or `requirements.txt` **lists packages**, so the container tries to download them from PyPI. Ask CoCo: *"Empty the dependencies list in pyproject.toml, delete requirements.txt if it exists, and restart the app. Use only pre-installed packages."* Or move the app to the warehouse runtime: `ALTER STREAMLIT DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.SUPPLY_RISK_DASHBOARD SET RUNTIME_NAME = 'SYSTEM$WAREHOUSE_RUNTIME';` (needs the `environment.yml` from the prompt) |
 | A page shows a red error | Paste the error into CoCo and ask it to fix the page and redeploy |
 | CoCo says a model or feature isn't available | Check the readiness row **Cortex cross-region inference = ANY_REGION**. If it's missing, re-run `snowsight/01_stage1_account.sql` |
 | No time, or CoCo isn't available | Use the fallback below |
