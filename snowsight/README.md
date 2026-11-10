@@ -1,5 +1,6 @@
 # GNN Supply Chain Risk - Trainee Guide (Snowsight only)
 
+> [!CAUTION]
 > **Disclaimer:** all data in this lab is **synthetic and for demonstration only**. Company names (for example
 > Albemarle Corp, BYD Battery or Queensland Minerals) are used for illustration. The vendors, purchase orders,
 > trade records, contracts, risk scores and predicted links are invented and **don't describe any real

@@ -2,6 +2,7 @@
 
 ### SAP data + a graph neural network + a Cortex Agent, on Snowflake, in about 30 minutes
 
+> [!CAUTION]
 > **Disclaimer: synthetic data, for demonstration only.** Every record in this lab (SAP vendors, materials,
 > purchase orders and bills of material, trade data, regional risk, supplier contracts, GNN risk scores and
 > predicted links) is **synthetic** and was created for this demo. Some company names are those of real
