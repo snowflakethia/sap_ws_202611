@@ -10,6 +10,10 @@ GRANT DATABASE ROLE SNOWFLAKE.CORTEX_USER TO ROLE DEMO_19865_ROLE;
 -- where the required models are available, so the labs work whatever region the trainee account is in.
 ALTER ACCOUNT SET CORTEX_ENABLED_CROSS_REGION = 'ANY_REGION';
 
+-- Let Streamlit apps on the container runtime (Lab 5) install Python packages through Snowflake's built-in
+-- PyPI mirror (SNOWFLAKE.SNOWPARK.PYPI_SHARED_REPOSITORY), with no internet access or external access integration.
+GRANT DATABASE ROLE SNOWFLAKE.PYPI_REPOSITORY_USER TO ROLE DEMO_19865_ROLE;
+
 SELECT 'Stage 1 complete' AS STATUS,
        'DEMO_19865_ROLE' AS ROLE_NAME,
        'DEMO_19865_WH'   AS WAREHOUSE_NAME,
