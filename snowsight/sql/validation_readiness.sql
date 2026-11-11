@@ -115,22 +115,33 @@ BEGIN
   rows_sql := rows_sql || ' UNION ALL SELECT 10, ''Cortex cross-region inference (CoCo, agents)'', ''ANY_REGION'', ''' || actual || ''', '''
            || IFF(actual = 'ANY_REGION', 'PASS', 'FAIL') || ''', ''01_stage1_account.sql''';
 
-  -- 10. Lab 5 dashboard (optional, created during Lab 5) - INFO only, never counts as a failure
+  -- 10. PyPI mirror access (Stage 1) - the Lab 5 Streamlit app installs its packages from it
+  BEGIN
+    SHOW GRANTS TO ROLE DEMO_19865_ROLE;
+    actual := (SELECT COUNT_IF("granted_on" = 'DATABASE_ROLE' AND "name" = 'SNOWFLAKE.PYPI_REPOSITORY_USER')::VARCHAR
+               FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())));
+  EXCEPTION WHEN OTHER THEN actual := '0';
+  END;
+  IF (actual <> '1') THEN fails := fails + 1; END IF;
+  rows_sql := rows_sql || ' UNION ALL SELECT 11, ''PyPI mirror access for Streamlit (Lab 5)'', ''1'', ''' || actual || ''', '''
+           || IFF(actual = '1', 'PASS', 'FAIL') || ''', ''01_stage1_account.sql''';
+
+  -- 11. Lab 5 dashboard (optional, created during Lab 5) - INFO only, never counts as a failure
   BEGIN
     SHOW STREAMLITS LIKE 'SUPPLY_RISK_DASHBOARD' IN SCHEMA DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK;
     actual := (SELECT COUNT(*)::VARCHAR FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())));
   EXCEPTION WHEN OTHER THEN actual := '0';
   END;
-  rows_sql := rows_sql || ' UNION ALL SELECT 11, ''Lab 5 dashboard SUPPLY_RISK_DASHBOARD (optional)'', ''created in Lab 5'', ''' || actual || ''', ''INFO'', ''labs/lab5_dashboard_with_coco.md''';
+  rows_sql := rows_sql || ' UNION ALL SELECT 12, ''Lab 5 dashboard SUPPLY_RISK_DASHBOARD (optional)'', ''created in Lab 5'', ''' || actual || ''', ''INFO'', ''labs/lab5_dashboard_with_coco.md''';
 
-  -- 11. Git workspace: private to the user and not visible to SQL - confirmed by the trainee in the UI.
-  rows_sql := rows_sql || ' UNION ALL SELECT 12, ''Git workspace gnn_training (check in the UI)'', ''visible in Projects > Workspaces'', ''-'', ''INFO'', ''00b_create_git_workspace.md''';
+  -- 12. Git workspace: private to the user and not visible to SQL - confirmed by the trainee in the UI.
+  rows_sql := rows_sql || ' UNION ALL SELECT 13, ''Git workspace gnn_training (check in the UI)'', ''visible in Workspaces'', ''-'', ''INFO'', ''00b_create_git_workspace.md''';
 
   -- OVERALL row first
   rows_sql := 'SELECT 1 AS N, ''OVERALL'' AS CHECK_NAME, ''READY'' AS EXPECTED, '''
            || IFF(fails = 0, 'READY', 'NOT READY') || ''' AS ACTUAL, '''
            || IFF(fails = 0, 'PASS - you can start the labs', 'FAIL - ' || fails || ' check(s) failed') || ''' AS RESULT, '''
-           || IFF(fails = 0, 'Start with labs/lab1_explore_data.md', 'Re-run the file in the FIX column of the first FAIL row') || ''' AS FIX'
+           || IFF(fails = 0, 'Start with labs/README.md', 'Re-run the file in the FIX column of the first FAIL row') || ''' AS FIX'
            || rows_sql;
   res := (EXECUTE IMMEDIATE 'SELECT CHECK_NAME, EXPECTED, ACTUAL, RESULT, FIX FROM (' || rows_sql || ') ORDER BY N');
   RETURN TABLE(res);
