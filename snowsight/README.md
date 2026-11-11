@@ -63,6 +63,7 @@ From now on, open each file **inside `gnn_training`**, then select **Run All** w
 | S1-B integrations | `DEMO_19865_PIP_INSTALLATION:true`, or `none` on a **trial** account | PASS, or **INFO** on trial (expected) |
 | S1-C key grants to DEMO_19865_ROLE | 4 (3 on trial) | PASS |
 | S1-D Cortex cross-region inference (CoCo, agents) | ANY_REGION | PASS |
+| S1-E PyPI mirror access for Streamlit (Lab 5) | 1 | PASS |
 
 ### Stage 2 - SAP data: `snowsight/02_stage2_sap_data.sql` (about 1 minute)
 **CHECKPOINT 2 - expected last result:** every row PASS.

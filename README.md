@@ -296,6 +296,7 @@ inference** so CoCo, Cortex Agents and Cortex Analyst can route to a region with
 | S1-B integrations | `DEMO_19865_PIP_INSTALLATION:true`, or `none` | PASS, or **INFO** on a trial account (that's expected) |
 | S1-C key grants to DEMO_19865_ROLE | `4`, or `3` on a trial account | PASS |
 | S1-D Cortex cross-region inference (CoCo, agents) | `ANY_REGION` | PASS |
+| S1-E PyPI mirror access for Streamlit (Lab 5) | `1` | PASS |
 
 ### Step 4 - SAP data products: `snowsight/02_stage2_sap_data.sql`
 Creates the 4 SAP data product databases and loads them. About 1 minute.

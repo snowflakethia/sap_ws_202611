@@ -12,6 +12,7 @@
 --                                             or "none" -> INFO on TRIAL accounts (expected)
 --   S1-C key grants to DEMO_19865_ROLE        4 (or 3 on trial accounts) PASS
 --   S1-D Cortex cross-region inference        ANY_REGION                 PASS
+--   S1-E PyPI mirror access for Streamlit      1                          PASS
 -- =============================================================================
 USE ROLE ACCOUNTADMIN;
 ALTER GIT REPOSITORY TRAINING_KIT_REPO.PUBLIC.GNN_KIT FETCH;
