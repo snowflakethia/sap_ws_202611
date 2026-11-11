@@ -368,6 +368,9 @@ Then run Step 9 again.
 
 ## The labs
 
+**Start here: [labs overview](labs/README.md)** (what each lab teaches, its key takeaway, and suggested paths).
+**Short of time? Do [Lab 2](labs/lab2_ask_the_agent.md) and [Lab 5](labs/lab5_dashboard_with_coco.md)** (about 75 minutes).
+
 | Lab | Time | What you'll learn |
 | --- | --- | --- |
 | [1. Explore the data](labs/lab1_explore_data.md) | 15 min | Query the SAP data products alongside the external signals, and read the GNN's risk scores and predicted hidden links. Why are the 2 CRITICAL suppliers both in Australia? |
