@@ -7,11 +7,14 @@
 -- Removes: databases DEMO_19865_DB, DEMO_SHARED_WORKSPACES, the 4 S4_Z*_DP_DELTA_SHARING_V1
 -- databases and TRAINING_KIT_REPO; warehouse DEMO_19865_WH; compute pool DEMO_19865_POOL;
 -- integrations DEMO_19865_PIP_INSTALLATION and GNN_KIT_GITHUB; roles DEMO_19865_ROLE and
--- DEMO_READER_ROLE. Nothing else in the account is touched.
+-- DEMO_READER_ROLE. The Lab 5 app SUPPLY_RISK_DASHBOARD goes with DEMO_19865_DB.
+-- Kept (account-wide setting from Stage 1): CORTEX_ENABLED_CROSS_REGION = ANY_REGION. To undo it:
+--   ALTER ACCOUNT UNSET CORTEX_ENABLED_CROSS_REGION;
+-- Nothing else in the account is touched.
 --
 -- Expected result (last statement): 6 rows, every RESULT = REMOVED.
 -- AFTERWARDS, delete your Git workspace in the UI:
---   Projects > Workspaces > gnn_training > (... menu next to the workspace name) > Delete.
+--   Workspaces > workspace selector > gnn_training > (... menu next to the workspace name) > Delete.
 -- =============================================================================
 USE ROLE ACCOUNTADMIN;
 
