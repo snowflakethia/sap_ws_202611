@@ -6,7 +6,9 @@
 --   pyproject.toml. This account has no internet access, so the app must use Snowflake's built-in PyPI mirror.
 --   This file attaches that mirror (SNOWFLAKE.SNOWPARK.PYPI_SHARED_REPOSITORY) to SUPPLY_RISK_DASHBOARD.
 --   On the warehouse runtime there is nothing to do, and the file says so.
--- HOW TO RUN: role ACCOUNTADMIN, Run All. Then open (or reload) the app.
+-- HOW TO RUN: Lab 5 Step 3.0 runs this file straight from the Git repository (no need to open it):
+--   EXECUTE IMMEDIATE FROM @TRAINING_KIT_REPO.PUBLIC.GNN_KIT/branches/main/snowsight/07a_lab5_prepare_app.sql;
+--   Or open it here: role ACCOUNTADMIN, Run All. Then open (or reload) the app.
 -- =============================================================================
 USE ROLE ACCOUNTADMIN;
 GRANT DATABASE ROLE SNOWFLAKE.PYPI_REPOSITORY_USER TO ROLE DEMO_19865_ROLE;
