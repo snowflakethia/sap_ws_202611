@@ -8,8 +8,8 @@
 
 > **In Labs 1 to 4 you asked questions. In Lab 5 you hand the business a working app.** One prompt to Cortex Code
 > (CoCo) in Snowsight turns 4 SAP data products, external signals, GNN predictions and supplier contracts into a
-> 6-page dashboard: spend at risk, hidden Tier 2 bottlenecks, exposed products, contract coverage, and two pages
-> that explain the business and technical architecture behind it. Then you grow it, one prompt at a time.
+> 2-page dashboard: a supply chain risk story with spend at risk, hidden Tier 2 bottlenecks, exposed products, contract coverage, and two pages
+> a technical architecture page. Then you grow it, one prompt at a time.
 
 > [!TIP]
 > **Key takeaway: one prompt turns SAP data products into a governed, production-shaped app, fast enough to build live in a design-thinking session.**
@@ -27,17 +27,23 @@ Labs 1 to 3 help you read the dashboard, but they aren't required: Lab 5 only ne
 
 ## What you'll build
 
-| Page | Business question | Data it combines |
-| --- | --- | --- |
-| 1. Executive overview | How much of our spend is exposed? | SAP purchase orders x GNN risk, bottlenecks, materials, **semantic view** |
-| 2. Suppliers | Who are the risky suppliers, and how much do we spend with them? | SAP vendors (financial health) + GNN risk + SAP spend |
-| 3. Hidden Tier 2 | Who are we *really* depending on? | GNN predicted links + Tier 2 bottlenecks |
-| 4. Materials & contracts | Which parts and products are exposed, and are we covered? | SAP materials + SAP BOM + material risk + contracts |
-| 5. Business architecture | Why does this work, and what value does it create? | SAP (system of record) + SAP BDC Connect + Snowflake (system of context) |
-| 6. Technical architecture | How was it built, and what does it depend on? | Every Snowflake object behind the app |
+**Page 1: Supply Chain Risk Dashboard**, one story you read from top to bottom:
 
-The prompt is deliberately **simple**: it gives CoCo the exact, tested SQL for every page and uses only built-in
-Streamlit charts. That makes the first run very likely to work. You add the richer features (map, network
+| Section | What the reader learns | Data it combines |
+| --- | --- | --- |
+| 1. The business and the challenge | Who we are, what SAP can and can't see, and the 4 questions we need answered | Context |
+| 2. The headline | How much of our spend is exposed (each KPI explained) | SAP purchase orders x GNN risk, bottlenecks, materials |
+| 3. Where the risk sits | Which suppliers, which regions | **Semantic view** + SAP vendors + GNN risk |
+| 4. Why: the hidden Tier 2 suppliers | Who we are *really* depending on | GNN predicted links + bottlenecks |
+| 5. What it hits | Which parts and products would stop | SAP materials + SAP BOM + material risk |
+| 6. Are we covered | Which contracts exist | Supplier contracts |
+| 7. What to do next | 3 actions | All of the above |
+| 8. How SAP and Snowflake made this possible | System of record + SAP BDC Connect + system of context | Business architecture |
+
+**Page 2: Technical Architecture**: how the app was built, the data flow, every Snowflake component it depends on,
+and the SQL behind each section.
+
+The prompt gives CoCo the exact, tested SQL for every section and uses only built-in Streamlit elements. That makes the first run very likely to work. You add the richer features (map, network
 diagram, contract search) in Step 5.
 
 **Expected numbers** (use them to check the app CoCo builds):
@@ -64,7 +70,8 @@ Copy the whole block below (hover over it and click the **copy** button at its t
 press Enter. **Don't edit it the first time.** It's written so CoCo can build the app without asking you anything.
 
 ```text
-Build and deploy a simple Streamlit in Snowflake app. Keep it simple: correctness matters more than design.
+Build and deploy a polished, story-driven Streamlit in Snowflake app for business leaders. Use only built-in
+Streamlit features (no extra packages, no custom HTML or CSS). Correctness first, then look and feel.
 
 APP SETUP
 - Name: DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.SUPPLY_RISK_DASHBOARD, title "Supply Chain Risk Dashboard".
@@ -100,8 +107,12 @@ APP SETUP
      @st.cache_data(ttl=600)
      def q(sql):
          return session.sql(sql).to_pandas()
-- Use only st.metric, st.bar_chart, st.dataframe, st.markdown, st.table, st.warning and a sidebar st.radio for
-  6 pages. On every page show st.warning("Synthetic data, for demonstration only. No real company, relationship
+- Layout: st.set_page_config(page_title="Supply Chain Risk", layout="wide"). Exactly 2 pages, as
+  st.tabs(["Supply Chain Risk Dashboard", "Technical Architecture"]). No sidebar.
+- Use only: st.title, st.subheader, st.markdown (with :red[...] / :orange[...] / :green[...] colour), st.caption,
+  st.metric (with help=), st.columns, st.container(border=True), st.divider, st.info, st.success, st.warning,
+  st.bar_chart, st.dataframe (hide_index=True), st.table and st.expander.
+- At the top of both pages: st.warning("Synthetic data, for demonstration only. No real company, relationship
   or risk is described.").
 - Use the SQL below exactly as written (it is tested). Don't write other queries.
 
@@ -137,24 +148,68 @@ BOM = SELECT p.DESCRIPTION AS FINISHED_PRODUCT, COUNT(*) AS COMPONENTS,
 CONTRACTS = SELECT CONTRACT_ID, CONTRACT_TITLE, SUPPLIER_NAME, MATERIAL_TYPE, ANNUAL_VALUE_USD
   FROM DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.CUSTOMER_CONTRACTS ORDER BY CONTRACT_ID
 
-PAGES
-1. Executive overview: 4 st.metric tiles: total PO spend and spend at risk in $M with its % of total (SPEND),
-   number of bottlenecks with DEPENDENT_COUNT >= 10 (BOTTLENECKS), number of materials with NUM_SUPPLIERS <= 1 and CRITICALITY_SCORE >= 0.8
-   (MATERIALS). st.bar_chart of RISK_MIX with the caption "Queried through the semantic view".
-2. Suppliers: st.dataframe of SUPPLIERS and st.bar_chart of SPEND by RISK_CATEGORY.
-3. Hidden Tier 2: st.dataframe of LINKS and st.bar_chart of BOTTLENECKS (EXTERNAL_SUPPLIER vs DEPENDENT_COUNT),
-   with the caption "Tier 2 suppliers are not in the SAP vendor master; a graph neural network predicts them".
-4. Materials & contracts: st.dataframe of MATERIALS, BOM and CONTRACTS, each with a one-line st.markdown heading.
-5. Business architecture: st.markdown text, no diagrams. Explain: SAP is the system of record (vendors,
-   materials, purchase orders, bill of materials); SAP BDC Connect shares them with Snowflake as zero-copy data
-   products; Snowflake is the system of context (trade data, regional risk, contracts, GNN predictions, semantic
-   view). Then an st.table "Business question / Data combined / Business value" with one row per page 1-4.
-   End with: "Built from one prompt: a high-fidelity prototype for design-thinking sessions before production."
-6. Technical architecture: st.markdown text, no diagrams. An st.table "Component / What it is / Snowflake
-   feature" with rows: SAP data products (4 databases, zero-copy sharing); views (VW_SUPPLIER_RISK,
-   VW_MATERIAL_RISK, VW_HIDDEN_DEPENDENCIES); semantic view SUPPLY_CHAIN_RISK_SEMANTIC_VIEW; Cortex Search
-   CONTRACT_SEARCH_SERVICE; Cortex Agent GNN_SUPPLY_RISK_AGENT; GNN model (Snowpark Container Services); this
-   app (Streamlit in Snowflake, built by Cortex Code). Then 3 bullets on how it was built.
+PAGE 1 - "Supply Chain Risk Dashboard": one scrolling story, top to bottom. Number each section heading.
+Start every section with one plain-English sentence saying what the reader learns, and end it with a one-line
+"So what" in st.info. Put the numbers inside st.container(border=True) cards.
+
+0. Title "Supply Chain Risk Dashboard" and a caption "SAP data products on Snowflake, enriched with trade data,
+   regional risk, contracts and a graph neural network (GNN)".
+1. "The business and the challenge" (st.markdown, 3 short paragraphs):
+   - Who we are: a manufacturer of 85 kWh EV battery packs. SAP S/4HANA is our system of record: 50 direct (Tier 1)
+     suppliers in 9 countries, 26 materials (20 raw materials, 5 sub-assemblies, 1 finished battery pack) and
+     120 purchase orders in 2023. SAP Business Data Cloud (BDC) shares these as data products with Snowflake, zero-copy.
+   - The challenge: SAP only sees who WE buy from. It can't see who our suppliers buy from. Lithium, cobalt and
+     graphite come from a few regions, and one hidden Tier 2 plant can quietly feed most of our supply base.
+     A disruption there stops battery production, and we would only find out when a delivery fails.
+   - Why this dashboard: to answer 4 questions before the next disruption: How much of our spend is exposed?
+     Where does the risk sit? Who are we really depending on? Which products would stop?
+2. "The headline" - 4 st.metric cards in st.columns(4), each with a help= definition:
+   - "Total PO spend (2023)" = SPEND.TOTAL_SPEND in $M. help: "Value of all 2023 purchase orders in SAP
+     (quantity x unit price) with our 50 Tier 1 suppliers."
+   - "Spend at risk" = SPEND.SPEND_AT_RISK in $M, delta = its % of total, delta_color="inverse". help: "Part of that
+     spend placed with suppliers the GNN rates HIGH or CRITICAL risk."
+   - "Hidden Tier 2 bottlenecks" = rows of BOTTLENECKS with DEPENDENT_COUNT >= 10. help: "External suppliers, not in
+     SAP, that 10 or more of our suppliers depend on."
+   - "Single-source critical parts" = rows of MATERIALS with NUM_SUPPLIERS <= 1 and CRITICALITY_SCORE >= 0.8.
+     help: "Critical materials with no or only one supplier."
+   Then one st.markdown sentence that reads the numbers back, e.g. ":red[$18.6M (13%)] of our spend sits with
+   high-risk suppliers, and 9 hidden suppliers each sit behind 10 or more of our suppliers."
+3. "Where the risk sits": left column st.bar_chart of RISK_MIX (caption "Counted through the semantic view
+   SUPPLY_CHAIN_RISK_SEMANTIC_VIEW, the same definitions the Cortex Agent uses"); right column st.dataframe of the
+   HIGH and CRITICAL rows of SUPPLIERS (VENDOR_NAME, COUNTRY_CODE, RISK_CATEGORY, GNN_RISK_SCORE, SPEND).
+   So what: "All high-risk suppliers are in Australia (lithium) or DR Congo (cobalt): a regional concentration."
+   Put the full SUPPLIERS table in an st.expander "All 50 suppliers".
+4. "Why: the hidden Tier 2 suppliers": st.bar_chart of BOTTLENECKS (x EXTERNAL_SUPPLIER, y DEPENDENT_COUNT) and the
+   caption "None of these companies is in the SAP vendor master. The GNN found them from trade data (bills of
+   lading)". Put LINKS in an st.expander "Predicted hidden links (GNN)".
+   So what: name the top 2 bottlenecks and their DEPENDENT_COUNT out of 50 suppliers.
+5. "What it hits: parts and products": st.dataframe of MATERIALS with NUM_SUPPLIERS <= 1, then st.dataframe of BOM.
+   So what: "A single-source part can stop the whole battery pack."
+6. "Are we covered: contracts": 2 st.metric cards (number of contracts, total ANNUAL_VALUE_USD in $M) and
+   st.dataframe of CONTRACTS. So what: "Check force majeure and termination terms with the Tier 2 suppliers above."
+7. "What to do next": st.success with 3 numbered actions: qualify a second source for the HIGH/CRITICAL suppliers;
+   engage the top Tier 2 bottlenecks directly and add them to supplier monitoring; add buffer stock for the
+   single-source critical parts.
+8. "How SAP and Snowflake made this possible" (the business architecture): 3 st.columns cards:
+   "SAP - system of record" (vendors, materials, purchase orders, bill of materials),
+   "SAP BDC Connect - the bridge" (zero-copy data products, SAP semantics kept, no extracts),
+   "Snowflake - system of context" (trade data, regional risk, contracts, GNN, semantic view, Cortex AI).
+   Then an st.table "Business question / Data combined / Business value" with one row per sections 2-6.
+   End with st.info("Built from one prompt: a high-fidelity prototype for design-thinking sessions, on the same
+   data products and objects a production app would use.")
+
+PAGE 2 - "Technical Architecture":
+1. One paragraph: how the app was built (one Cortex Code prompt in Snowsight; runs inside Snowflake as
+   DEMO_19865_ROLE on warehouse DEMO_19865_WH; no servers, credentials or data movement).
+2. "Data flow" as a numbered st.markdown list: SAP S/4HANA -> SAP BDC Connect (zero-copy) -> 4 SAP data product
+   databases -> views joining SAP + GNN outputs -> semantic view -> this app and the Cortex Agent.
+3. st.table "Component / What it is / Snowflake feature" with rows: SAP data products (4 databases, zero-copy
+   sharing); views VW_SUPPLIER_RISK, VW_MATERIAL_RISK, VW_HIDDEN_DEPENDENCIES; semantic view
+   SUPPLY_CHAIN_RISK_SEMANTIC_VIEW (semantic views, verified queries); Cortex Search CONTRACT_SEARCH_SERVICE;
+   Cortex Agent GNN_SUPPLY_RISK_AGENT; GNN model (Snowpark Container Services); this app (Streamlit in Snowflake,
+   built by Cortex Code).
+4. 3 st.metric cards: "Databases used" = 5, "Queries behind the dashboard" = 8, "Data copied out of Snowflake" = 0.
+5. st.expander "The SQL behind each section" showing the 8 queries with st.code(..., language="sql").
 
 FINISH
 - Run each SQL once to confirm it works, then deploy the app.
@@ -187,7 +242,8 @@ read Step 4.
 1. Click the link CoCo returns. Or, in the left navigation, open **Apps** (in some accounts **Projects**) >
    **Streamlit** and click **Supply Chain Risk Dashboard**.
 2. On **Executive overview**, compare the tiles with the **Expected numbers** table above.
-3. Click through all 6 pages in the sidebar. Each one should load without a red error box.
+3. Scroll the **Supply Chain Risk Dashboard** tab from top to bottom, then open the **Technical Architecture** tab.
+   Both should load without a red error box. Hover over the **?** next to each headline number to read its definition.
 
 **Checkpoint:** run `snowsight/08_readiness_check.sql` again. The row **Lab 5 dashboard SUPPLY_RISK_DASHBOARD**
 should show `1`.
@@ -220,15 +276,15 @@ SUPPLY_RISK_DASHBOARD"*. Then find:
 ## Step 5 - Iterate like a product team (pick one or two)
 Now add the richer features, **one prompt at a time**, and watch the app change. Small steps keep each change
 reliable:
-- **Contract search (Cortex Search):** *"On Materials & contracts, add a text box that searches the contracts with
+- **Contract search (Cortex Search):** *"In section 6 (Are we covered), add a text box that searches the contracts with
   SNOWFLAKE.CORTEX.SEARCH_PREVIEW('DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.CONTRACT_SEARCH_SERVICE', ...) using columns
   CONTRACT_ID, CONTRACT_TITLE, SUPPLIER_NAME and CONTRACT_TEXT, limit 3, and show each result in an expander.
   Escape single quotes in the search text."* Then search *can we walk away from the agreement early*.
-- **Network diagram:** *"On Hidden Tier 2, add an st.graphviz_chart built as a DOT string from LINKS (external
+- **Network diagram:** *"In section 4 (Why: the hidden Tier 2 suppliers), add an st.graphviz_chart built as a DOT string from LINKS (external
   supplier -> SAP supplier, label = probability). Don't add any package."*
-- **What-if:** *"On Executive overview, add a selectbox of bottlenecks and show how much SAP spend sits with the SAP
+- **What-if:** *"In section 2 (The headline), add a selectbox of bottlenecks and show how much SAP spend sits with the SAP
   suppliers linked to it in LINKS."*
-- **Download:** *"On Suppliers, add a download button for the table as CSV."*
+- **Download:** *"In section 3, add a download button for the supplier table as CSV."*
 
 Each change takes minutes. This is the loop you'd run with business users in the room.
 
@@ -243,10 +299,10 @@ with a **working prototype on governed, production-shaped data**.
 | --- | --- | --- |
 | **Empathise** | Interview procurement, supply chain and finance: which decisions, which pain? | The Labs 1-2 data and agent, to explore their questions live |
 | **Define** | Write 3-5 business questions (like the *What you'll build* table) | The semantic view, so everyone uses one definition of "risk" or "spend" |
-| **Ideate** | Sketch pages and KPIs together | The Business architecture page as a shared picture of the value |
+| **Ideate** | Sketch pages and KPIs together | Section 8 (how SAP and Snowflake made this possible) as a shared picture of the value |
 | **Prototype** | Turn the sketch into a prompt; CoCo builds the app in minutes | Streamlit in Snowflake on the real object names, roles and data products |
 | **Test** | Users click through the app the same day; capture feedback | Follow-up prompts change the app while users watch |
-| **Decide** | Keep, change or drop; agree what production needs | The Technical architecture page lists every dependency to productionise |
+| **Decide** | Keep, change or drop; agree what production needs | The Technical Architecture page lists every dependency to productionise |
 
 **Suggested 2-hour workshop:** 20 min problem framing, 20 min questions and KPIs, 15 min writing the prompt together,
 20 min while CoCo builds (review the data with Lab 1 queries), 30 min user testing and follow-up prompts, 15 min
