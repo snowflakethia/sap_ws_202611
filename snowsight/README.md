@@ -113,7 +113,7 @@ If the search row shows **WAIT**, wait one minute and run the file again.
 ### Step 7 - Am I ready? `snowsight/08_readiness_check.sql`
 Run it any time; it changes nothing.
 
-**Expected:** the first row reads **`OVERALL | READY | PASS - you can start the labs`**, followed by 9 PASS rows
+**Expected:** the first row reads **`OVERALL | READY | PASS - you can start the labs`**, followed by 10 PASS rows
 (including Cortex cross-region inference = ANY_REGION) and 2 INFO rows (the optional Lab 5 dashboard, and the
 workspace, which you already checked).
 
