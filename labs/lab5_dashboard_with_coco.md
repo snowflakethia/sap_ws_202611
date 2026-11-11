@@ -69,7 +69,9 @@ Build and deploy a simple Streamlit in Snowflake app. Keep it simple: correctnes
 APP SETUP
 - Name: DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.SUPPLY_RISK_DASHBOARD, title "Supply Chain Risk Dashboard".
 - Owner role DEMO_19865_ROLE, query warehouse DEMO_19865_WH.
-- No package downloads: this account can't reach PyPI. Use only streamlit and pandas (already installed).
+- Runtime: container runtime (RUNTIME_NAME = 'SYSTEM$ST_CONTAINER_RUNTIME_PY3_11'). This account has no internet
+  access, so packages must come from Snowflake's built-in PyPI mirror: create the app with
+  ARTIFACT_REPOSITORIES = (snowflake.snowpark.pypi_shared_repository). Role DEMO_19865_ROLE already has access.
 - Create exactly 3 files:
   1) streamlit_app.py
   2) pyproject.toml, exactly:
@@ -77,8 +79,8 @@ APP SETUP
      name = "supply-risk-dashboard"
      version = "0.1.0"
      requires-python = ">=3.11"
-     dependencies = []
-  3) environment.yml, exactly:
+     dependencies = ["streamlit[snowflake]>=1.50", "pandas"]
+  3) environment.yml (only used if the app runs on the warehouse runtime), exactly:
      name: app_environment
      channels:
        - snowflake
@@ -86,7 +88,7 @@ APP SETUP
        - streamlit
        - pandas
        - snowflake-snowpark-python
-  Do not create requirements.txt. Do not add any other package or external access integration.
+  Do not create requirements.txt. Do not add any other package or an external access integration.
 - Start streamlit_app.py with:
      import streamlit as st
      import pandas as pd
@@ -155,8 +157,12 @@ PAGES
    app (Streamlit in Snowflake, built by Cortex Code). Then 3 bullets on how it was built.
 
 FINISH
-- Run each SQL once to confirm it works, deploy the app, open it and check every page loads.
-- If you see a package or dependency error, re-check the 3 files above, fix them and restart the app.
+- Run each SQL once to confirm it works, then deploy the app.
+- Make sure the app has the PyPI mirror attached:
+    ALTER STREAMLIT DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.SUPPLY_RISK_DASHBOARD
+      SET ARTIFACT_REPOSITORIES = (snowflake.snowpark.pypi_shared_repository);
+- Open the app and check every page loads. If you see a package or Streamlit version error, re-check the
+  3 files and the artifact repository above, fix them and restart the app.
 - Give me the app link.
 ```
 
@@ -164,16 +170,20 @@ FINISH
 steps when asked. It typically takes **5-10 minutes**. While you wait,
 read Step 4.
 
-> **Why the prompt talks about packages and runtimes:** Streamlit in Snowflake has two runtimes. The
-> **container runtime** (the default for new apps) reads `pyproject.toml` and downloads every package listed in it
-> from PyPI, which a trial account can't reach. The **warehouse runtime** reads `environment.yml` and uses the
-> Snowflake Anaconda channel. This app only needs packages that both runtimes already include, so the prompt asks
-> for an **empty** `pyproject.toml` *and* an `environment.yml`: whichever runtime CoCo uses, nothing is downloaded.
+> **Why the prompt talks about packages and runtimes:** new Streamlit apps run on the **container runtime**,
+> which builds a fresh Python environment from `pyproject.toml` every time it starts. Streamlit itself must be listed
+> there, and the packages are downloaded when the app starts. A trial account has no internet access, so the app uses
+> Snowflake's **built-in PyPI mirror** (`SNOWFLAKE.SNOWPARK.PYPI_SHARED_REPOSITORY`), attached as an *artifact
+> repository*. Setup already gave `DEMO_19865_ROLE` access to it. The `environment.yml` is only a safety net in case
+> the app lands on the older warehouse runtime.
 
 > **Why the prompt is so specific:** the exact SQL, files and chart types leave CoCo nothing to guess. The
 > same prompt then gives similar apps for every trainee. That's what *zero-shot* means here: no back-and-forth needed.
 
 ## Step 3 - Open the app and check it
+0. **Before you open the app the first time:** in `gnn_training`, open `snowsight/07a_lab5_prepare_app.sql`, set
+   role **ACCOUNTADMIN** and **Run All**. Expected: one row starting with **DONE**. It makes sure the app can install
+   Streamlit from Snowflake's built-in PyPI mirror, so it starts first time. (Safe to run more than once.)
 1. Click the link CoCo returns. Or, in the left navigation, open **Apps** (in some accounts **Projects**) >
    **Streamlit** and click **Supply Chain Risk Dashboard**.
 2. On **Executive overview**, compare the tiles with the **Expected numbers** table above.
@@ -185,8 +195,9 @@ should show `1`.
 | If you see | Do this |
 | --- | --- |
 | A KPI doesn't match the table | Ask CoCo: *"Use the SPEND query from my prompt exactly as written; spend at risk should be $18.6M."* |
-| *Installing dependencies failed because the pyproject.toml file does not exist* | The app is on the **container runtime** and has no `pyproject.toml`. Ask CoCo: *"Add a pyproject.toml with name, version, requires-python >=3.11 and an empty dependencies list, as in my original prompt, then restart the app."* |
-| *Failed to retrieve packages from the package server. Have you enabled External Access Integration (EAI)?* (mentions `pypi.org`) | The app's `pyproject.toml` or `requirements.txt` **lists packages**, so the container tries to download them from PyPI. Ask CoCo: *"Empty the dependencies list in pyproject.toml, delete requirements.txt if it exists, and restart the app. Use only pre-installed packages."* Or move the app to the warehouse runtime: `ALTER STREAMLIT DEMO_19865_DB.GNN_SUPPLY_CHAIN_RISK.SUPPLY_RISK_DASHBOARD SET RUNTIME_NAME = 'SYSTEM$WAREHOUSE_RUNTIME';` (needs the `environment.yml` from the prompt) |
+| *Failed to get the version of the Streamlit library ... ">=1.48.0"* | Streamlit isn't installed in the app's environment: `pyproject.toml` doesn't list it, or the PyPI mirror isn't attached. Ask CoCo: *"Set pyproject.toml dependencies to [\"streamlit[snowflake]>=1.50\", \"pandas\"] as in my prompt."* Then run `snowsight/07a_lab5_prepare_app.sql` and reload the app |
+| *Failed to retrieve packages from the package server. Have you enabled External Access Integration (EAI)?* (mentions `pypi.org`) | The PyPI mirror isn't attached, so the app tries the public internet. Run `snowsight/07a_lab5_prepare_app.sql`, then reload the app |
+| *Installing dependencies failed because the pyproject.toml file does not exist* | Ask CoCo: *"Add the pyproject.toml exactly as in my original prompt and restart the app."* Then run `snowsight/07a_lab5_prepare_app.sql` |
 | A page shows a red error | Paste the error into CoCo and ask it to fix the page and redeploy |
 | CoCo says a model or feature isn't available | Check the readiness row **Cortex cross-region inference = ANY_REGION**. If it's missing, re-run `snowsight/01_stage1_account.sql` |
 | No time, or CoCo isn't available | Use the fallback below |
