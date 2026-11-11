@@ -4,8 +4,8 @@
 -- HOW TO RUN (the only file you copy by hand):
 --   1. In a browser tab, open https://raw.githubusercontent.com/snowflakethia/sap_ws_202611/main/snowsight/00_bootstrap.sql
 --      then press Ctrl/Cmd + A (select all) and Ctrl/Cmd + C (copy).
---   2. In Snowsight: Projects > Workspaces > + Add new > SQL File, paste, then Run All.
---      (Classic UI: Projects > Worksheets > + > SQL Worksheet.)
+--   2. In Snowsight: Workspaces (left navigation) > My Workspace > + Add new > SQL File,
+--      paste, then Run All. (Older UI: Projects > Workspaces, or Projects > Worksheets > +.)
 --   3. Role: ACCOUNTADMIN. No warehouse is needed.
 --
 -- What it creates (all removed again by 99_remove_setup.sql):
