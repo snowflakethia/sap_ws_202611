@@ -236,9 +236,22 @@ read Step 4.
 > same prompt then gives similar apps for every trainee. That's what *zero-shot* means here: no back-and-forth needed.
 
 ## Step 3 - Open the app and check it
-0. **Before you open the app the first time:** in `gnn_training`, open `snowsight/07a_lab5_prepare_app.sql`, set
-   role **ACCOUNTADMIN** and **Run All**. Expected: one row starting with **DONE**. It makes sure the app can install
-   Streamlit from Snowflake's built-in PyPI mirror, so it starts first time. (Safe to run more than once.)
+0. **Before you open the app the first time:** create a new SQL file (in `gnn_training` or My Workspace: **+ Add
+   new > SQL File**), set role **ACCOUNTADMIN**, paste these 3 lines and **Run All**:
+
+   ```sql
+   USE ROLE ACCOUNTADMIN;
+   ALTER GIT REPOSITORY TRAINING_KIT_REPO.PUBLIC.GNN_KIT FETCH;
+   EXECUTE IMMEDIATE FROM @TRAINING_KIT_REPO.PUBLIC.GNN_KIT/branches/main/snowsight/07a_lab5_prepare_app.sql;
+   ```
+
+   **What it does:** fetches the latest course files from GitHub and runs `snowsight/07a_lab5_prepare_app.sql`, which
+   attaches Snowflake's built-in PyPI mirror to the app so it can install Streamlit and starts first time.
+   **Expected:** one row starting with **DONE**. Safe to run more than once.
+
+   > **Why not open the file in `gnn_training`?** Your Git workspace shows the course files as they were when you
+   > created it. Files added later (like this one) only appear after you pull the latest changes. The 3 lines above
+   > always run the latest version, whatever your workspace shows.
 1. Click the link CoCo returns. Or, in the left navigation, open **Apps** (in some accounts **Projects**) >
    **Streamlit** and click **Supply Chain Risk Dashboard**.
 2. On **Executive overview**, compare the tiles with the **Expected numbers** table above.
@@ -251,9 +264,9 @@ should show `1`.
 | If you see | Do this |
 | --- | --- |
 | A KPI doesn't match the table | Ask CoCo: *"Use the SPEND query from my prompt exactly as written; spend at risk should be $18.6M."* |
-| *Failed to get the version of the Streamlit library ... ">=1.48.0"* | Streamlit isn't installed in the app's environment: `pyproject.toml` doesn't list it, or the PyPI mirror isn't attached. Ask CoCo: *"Set pyproject.toml dependencies to [\"streamlit[snowflake]>=1.50\", \"pandas\"] as in my prompt."* Then run `snowsight/07a_lab5_prepare_app.sql` and reload the app |
-| *Failed to retrieve packages from the package server. Have you enabled External Access Integration (EAI)?* (mentions `pypi.org`) | The PyPI mirror isn't attached, so the app tries the public internet. Run `snowsight/07a_lab5_prepare_app.sql`, then reload the app |
-| *Installing dependencies failed because the pyproject.toml file does not exist* | Ask CoCo: *"Add the pyproject.toml exactly as in my original prompt and restart the app."* Then run `snowsight/07a_lab5_prepare_app.sql` |
+| *Failed to get the version of the Streamlit library ... ">=1.48.0"* | Streamlit isn't installed in the app's environment: `pyproject.toml` doesn't list it, or the PyPI mirror isn't attached. Ask CoCo: *"Set pyproject.toml dependencies to [\"streamlit[snowflake]>=1.50\", \"pandas\"] as in my prompt."* Then re-run the 3 lines in Step 3.0 and reload the app |
+| *Failed to retrieve packages from the package server. Have you enabled External Access Integration (EAI)?* (mentions `pypi.org`) | The PyPI mirror isn't attached, so the app tries the public internet. Re-run the 3 lines in Step 3.0, then reload the app |
+| *Installing dependencies failed because the pyproject.toml file does not exist* | Ask CoCo: *"Add the pyproject.toml exactly as in my original prompt and restart the app."* Then re-run the 3 lines in Step 3.0 |
 | A page shows a red error | Paste the error into CoCo and ask it to fix the page and redeploy |
 | CoCo says a model or feature isn't available | Check the readiness row **Cortex cross-region inference = ANY_REGION**. If it's missing, re-run `snowsight/01_stage1_account.sql` |
 | No time, or CoCo isn't available | Use the fallback below |
