@@ -356,7 +356,7 @@ Read-only; you can run it at any time.
 
 **Checkpoint 9:**
 - The first row reads **`OVERALL | READY | PASS - you can start the labs`**.
-- Then 9 PASS rows (including **Cortex cross-region inference = ANY_REGION**, which lets CoCo and the agent use a
+- Then 10 PASS rows (including **Cortex cross-region inference = ANY_REGION**, which lets CoCo and the agent use a
   region with the required models), and 2 INFO rows: the optional Lab 5 dashboard and the workspace you checked in Step 2.
 
 If it says **NOT READY**, look at the first FAIL row and run the file named in its **FIX** column.
