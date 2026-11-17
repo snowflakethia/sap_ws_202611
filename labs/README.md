@@ -6,11 +6,20 @@
 > trade records, contracts, risk scores and predicted links are invented and **don't describe any real
 > company, relationship or risk**. Don't use them for business decisions.
 
-**The story across the five labs:** a manufacturer of EV battery packs runs on SAP S/4HANA. SAP knows its 50 direct
-(Tier 1) suppliers, but not who *they* buy from, and that's where the next disruption will come from. Through
-**SAP Business Data Cloud (BDC)**, the SAP data products land in Snowflake without copying. Snowflake adds the
-context SAP doesn't have (trade data, regional risk, supplier contracts, a graph neural network and Cortex AI) and
-turns it into answers and an app the business can use.
+**The story:** an EV battery-pack maker runs its purchasing on SAP. SAP lists its 50 direct (Tier 1) suppliers and
+the **$143.3M** it spends with them, but not who those suppliers buy from. Through **SAP Business Data Cloud (BDC)**,
+the SAP data products land in Snowflake without copying, and Snowflake adds the missing context: trade data shows who
+is shipping to whom, and a graph neural network (GNN) predicts the hidden Tier 2 links and scores every supplier for
+risk. Two CRITICAL suppliers turn up, both in Australia, and **$18.6M** of the spend sits with high-risk suppliers.
+
+- **Lab 2 - get answers you can check:** a Cortex Agent answers plain-English questions over the risk numbers and the
+  supplier contracts together, for example *"Which suppliers are CRITICAL, and what do their contracts say about
+  force majeure?"* Every answer shows the SQL it ran and the contract passages it read, so you can check it.
+- **Lab 5 - hand the business an app:** one Cortex Code prompt turns the same data into a Streamlit app. The first
+  page tells the risk story from top to bottom: spend at risk, hidden bottlenecks, exposed products and contract
+  coverage. The second page shows the technical architecture behind it.
+
+Labs 1, 3 and 4 go deeper: the data behind the answers, what makes an agent good, and where the risk scores come from.
 
 **SAP is the system of record. Snowflake is the system of context. SAP BDC Connect bridges the two.**
 

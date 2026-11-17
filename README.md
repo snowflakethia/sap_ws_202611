@@ -368,16 +368,27 @@ Then run Step 9 again.
 
 ## The labs
 
+**The story:** an EV battery-pack maker runs its purchasing on SAP. SAP lists its 50 direct (Tier 1) suppliers and
+the **$143.3M** it spends with them, but not who those suppliers buy from. Snowflake adds the missing context: trade
+data shows who is shipping to whom, and a graph neural network (GNN) predicts the hidden Tier 2 links and scores every
+supplier for risk. Two CRITICAL suppliers turn up, both in Australia, and **$18.6M** of the spend sits with high-risk
+suppliers.
+
+- **Lab 2 - get answers you can check:** a Cortex Agent answers plain-English questions over the risk numbers and the
+  supplier contracts together. Every answer shows the SQL it ran and the contract passages it read.
+- **Lab 5 - hand the business an app:** one Cortex Code prompt turns the same data into a 2-page Streamlit app: the
+  risk story from top to bottom, plus the technical architecture behind it.
+
 **Start here: [labs overview](labs/README.md)** (what each lab teaches, its key takeaway, and suggested paths).
 **Short of time? Do [Lab 2](labs/lab2_ask_the_agent.md) and [Lab 5](labs/lab5_dashboard_with_coco.md)** (about 75 minutes).
 
 | Lab | Time | What you'll learn |
 | --- | --- | --- |
 | [1. Explore the data](labs/lab1_explore_data.md) | 15 min | Query the SAP data products alongside the external signals, and read the GNN's risk scores and predicted hidden links. Why are the 2 CRITICAL suppliers both in Australia? |
-| [2. Ask the agent](labs/lab2_ask_the_agent.md) | 25 min | Ask 5 questions, then open the agent's **traces** to see the SQL it ran, whether it used verified SQL, and the contract passages it read. Run the agent's contract search yourself |
+| [2. Ask the agent](labs/lab2_ask_the_agent.md) **(recommended)** | 25 min | Ask 5 questions, then open the agent's **traces** to see the SQL it ran, whether it used verified SQL, and the contract passages it read. Run the agent's contract search yourself |
 | [3. Build your own agent](labs/lab3_build_your_own_agent.md) | 20 min | Build an agent from scratch in Agent Studio, then compare it with the tuned one to see what orchestration instructions add |
 | [4. Retrain the GNN](labs/lab4_optional_retrain_gnn.md) (optional) | 45-60 min | Run the PyTorch Geometric notebook on Snowpark Container Services and produce your own risk scores. *Needs a non-trial account (internet access for Python packages)* |
-| [5. Build a dashboard with one prompt](labs/lab5_dashboard_with_coco.md) (optional) | 45-60 min | One prompt to **Cortex Code (CoCo)** builds a 7-page Streamlit dashboard over 5 databases: spend at risk, hidden Tier 2 bottlenecks, BOM exposure, contract search, plus business and technical architecture pages. Use the pattern for design-thinking prototypes |
+| [5. Build a dashboard with one prompt](labs/lab5_dashboard_with_coco.md) **(recommended)** | 45-60 min | One prompt to **Cortex Code (CoCo)** builds a 2-page Streamlit app over the SAP data products: a supply chain risk story (spend at risk, hidden Tier 2 bottlenecks, exposed products, contract coverage) and a technical architecture page. Use the pattern for design-thinking prototypes |
 
 ---
 
