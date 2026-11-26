@@ -30,7 +30,7 @@ but the UI check fails, the UI is usually showing an old view or the wrong conte
 
 | README step | What you saw | Likely cause | Fix |
 | --- | --- | --- | --- |
-| Any | An object is missing in Database Explorer or Warehouses | The list is cached | Click the refresh icon, or reload the browser page |
+| Any | An object is missing in Catalog or Warehouses | The list is cached, or the Catalog tree only shows some databases | Click **Refresh** in the Catalog explorer, or type the name in **Find objects by name** |
 | Any | Objects are missing even after a refresh | Your **user-menu** role (bottom-left) isn't ACCOUNTADMIN, so Snowsight hides them | Click your name > **Switch role** > **ACCOUNTADMIN** |
 | 1 | `TRAINING_KIT_REPO` has no `GNN_KIT` repository | Only part of `bootstrap.sql` ran | Open `bootstrap.sql` again, click inside the editor, **Run All** |
 | 2 | `README.md` or the `snowsight` folder isn't there | You are in **My Workspace**, or created a Private/Shared workspace | Switch the selector to **gnn_training**; if it doesn't exist, redo Step 2 with **Git workspace** |

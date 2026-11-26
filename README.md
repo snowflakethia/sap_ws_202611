@@ -227,10 +227,12 @@ The only step where you copy code by hand. **Don't create a new workspace for th
 5. Click inside the empty `bootstrap.sql` editor and paste: **Ctrl + V** (Mac: **Cmd + V**). You should see about
    45 lines, starting with `-- ====`.
 6. At the top of the editor, click **Choose role** and select **ACCOUNTADMIN**. Leave **Choose warehouse** empty.
-7. Click the small **arrow next to Run** > **Run All** (or press Ctrl/Cmd + Shift + Enter).
+7. Click inside the editor, then press **Ctrl + Shift + Enter** (Mac: **Cmd + Shift + Enter**) to run all.
+   (Or click the small **Run options** arrow next to the **Run selected** button > **Run All**.)
    Don't select any lines first; Run All runs everything.
 
-**Checkpoint 1 - you should see:** in the results pane at the bottom, a table with **4 rows**, ending in
+**Checkpoint 1 - you should see** (the file's comments call it *CHECKPOINT 0*; it's the same check): in the
+results pane at the bottom, a table with **4 rows**, ending in
 `s4custom_billofmaterials.csv`, `s4custom_materials.csv`, `s4custom_purchase_orders.csv` and `s4custom_vendors.csv`.
 
 | If you see | Do this |
@@ -240,8 +242,10 @@ The only step where you copy code by hand. **Don't create a new workspace for th
 | Only part of the code ran | You selected some lines before running. Click inside the editor, then use **Run All** |
 
 **Check it yourself (1 min)**
-- [ ] Left navigation > **Catalog** > **Database Explorer**: the database `TRAINING_KIT_REPO` is listed.
-- [ ] Expand **TRAINING_KIT_REPO > PUBLIC > Git Repositories**: you see `GNN_KIT`.
+- [ ] Left navigation > **Catalog**. In the **Catalog explorer** panel, type `TRAINING_KIT_REPO` in **Find objects by
+  name**: the database is listed. (The tree doesn't show every database at once, so use the search box.)
+- [ ] Open **TRAINING_KIT_REPO > PUBLIC**: the object list shows `GNN_KIT` (type *Git repository*) and `KIT_FILES`
+  (type *Stage*).
 - [ ] Not right? Return to Workspaces > My Workspace > `bootstrap.sql` and **Run All** again as ACCOUNTADMIN.
 
 ### Step 2 - Create your Git workspace (the only new workspace you create)
@@ -266,7 +270,11 @@ This gives you every course file inside Snowsight, so you never copy code again.
 
 **Checkpoint 2 - you should see:**
 - The selector at the top of the file list says **gnn_training**.
-- The folders `config`, `data`, `docs`, `labs`, `scripts`, `snowsight`, `sql` and `workspace`, plus `README.md`.
+- The folders `config`, `data`, `docs`, `labs`, `scripts`, `snowsight`, `sql` and `workspace`, plus `.gitignore`
+  and `README.md`. The bottom bar shows the branch **main**.
+
+> **Already have `gnn_training` from an earlier session?** Don't create a second one. Open it and pull the latest
+> course files with **Pull** (look under the branch name **main** in the bottom bar, or the **Changes** tab).
 
 | If you see | Do this |
 | --- | --- |
@@ -274,7 +282,7 @@ This gives you every course file inside Snowsight, so you never copy code again.
 | `GNN_KIT_GITHUB` isn't in the list | Same as above: Step 1 hasn't run, or your user-menu role isn't ACCOUNTADMIN |
 | I created a *Private* or *Shared* workspace by mistake | Harmless. Ignore it, or delete it from the workspace selector's **...** menu, then do Step 2 again with **Git workspace** |
 | I can't find the small **+** | Hover just right of the *Workspaces / Databases* tabs at the top of the file panel. If the panel is collapsed, click **Workspaces** in the left navigation first |
-| No **Git workspace** option | Your account uses the older Worksheets UI. Use **Catalog > Database Explorer > TRAINING_KIT_REPO > PUBLIC > Git Repositories > GNN_KIT**, find each file and choose **Copy into worksheet** |
+| No **Git workspace** option | Your account uses the older Worksheets UI. Use **Catalog** > search `TRAINING_KIT_REPO` > **PUBLIC > GNN_KIT**, find each file and choose **Copy into worksheet** |
 
 **Check it yourself (1 min)**
 - [ ] Click `README.md` in **gnn_training**: its first line reads *Find the supplier risk your ERP can't see*.
@@ -295,7 +303,8 @@ For Steps 3-9, repeat these five actions:
    It opens in an editor tab.
 3. At the top of the editor, click **Choose role** > **ACCOUNTADMIN**. Leave the warehouse empty; the scripts
    set their own.
-4. Click the **arrow next to Run** > **Run All**. Wait until it finishes; a spinner shows while it runs.
+4. Click inside the editor and press **Ctrl/Cmd + Shift + Enter** (Run All), or use **Run options** > **Run All**.
+   Wait until it finishes; the results pane shows progress such as *5/7 Executing query*.
 5. In the results pane at the bottom, look at the **last result** and compare it with the checkpoint below.
    Every row in the **RESULT** column must read **PASS**. **INFO** is fine where noted.
 
@@ -318,7 +327,7 @@ inference** so CoCo, Cortex Agents and Cortex Analyst can route to a region with
 **Check it yourself (1 min)**
 - [ ] Left navigation > **Compute** > **Warehouses**: `DEMO_19865_WH` is listed, size **Small**.
 - [ ] Bottom-left, click your name > **Switch role**: `DEMO_19865_ROLE` is in the list. (Don't switch to it; stay on ACCOUNTADMIN.)
-- [ ] **Catalog > Database Explorer**: `DEMO_19865_DB` is listed.
+- [ ] **Catalog**: `DEMO_19865_DB` is listed in the Catalog explorer.
 - [ ] Not right? Refresh the browser page (lists can be cached), then run `01_stage1_account.sql` again.
 
 ### Step 4 - SAP data products: `snowsight/02_stage2_sap_data.sql`
@@ -330,8 +339,8 @@ Creates the 4 SAP data product databases and loads them. About 1 minute.
 - `S2-C vendor columns populated` = `50/50/50/50`
 
 **Check it yourself (1 min)**
-- [ ] **Catalog > Database Explorer**: 4 databases whose names start with `S4_Z` are listed.
-- [ ] Open **S4_ZVENDORINFO_DP_DELTA_SHARING_V1 > s4_zvendorinfo_dp_srv:v1 > Tables > s4custom_vendors** > **Data Preview**:
+- [ ] **Catalog**: type `S4_Z` in **Find objects by name**: 4 databases are listed.
+- [ ] Open **S4_ZVENDORINFO_DP_DELTA_SHARING_V1 > s4_zvendorinfo_dp_srv:v1 > s4custom_vendors** and its data preview tab:
   vendor IDs look like `V10001`, and names such as **BHP Copper** appear.
 - [ ] Not right? Run `02_stage2_sap_data.sql` again; it reloads the data from scratch.
 
@@ -346,10 +355,10 @@ Creates the demo tables, views and stages. Under 1 minute.
 - `DEMO_SECRETS_STAGE is empty` = `0`
 
 **Check it yourself (1 min)**
-- [ ] **Catalog > Database Explorer > DEMO_19865_DB > GNN_SUPPLY_CHAIN_RISK**: **Tables** shows 6 (`BOTTLENECKS_PREDICTIONS`,
+- [ ] **Catalog > DEMO_19865_DB > GNN_SUPPLY_CHAIN_RISK**: the tree shows **Tables (6)** (`BOTTLENECKS_PREDICTIONS`,
   `CUSTOMER_CONTRACTS`, `REGIONS_EXTERNAL`, `RISK_SCORES_PREDICTIONS`, `SUPPLIER_LINKS_PREDICTIONS`, `TRADE_DATA_EXTERNAL`).
-- [ ] **Views** shows 4, each starting with `VW_`.
-- [ ] Not right? Click the refresh icon in Database Explorer, then run `03_stage3_demo_schema.sql` again.
+- [ ] It also shows **Views (4)**, each starting with `VW_`, and **Stages (3)**.
+- [ ] Not right? Click **Refresh** at the top of the Catalog explorer, then run `03_stage3_demo_schema.sql` again.
 
 ### Step 6 - Demo data: `snowsight/04_stage4_demo_data.sql`
 Loads the trade data, contracts and precomputed GNN results. About 1 minute.
@@ -361,7 +370,7 @@ Loads the trade data, contracts and precomputed GNN results. About 1 minute.
 - `VW_SUPPLIER_RISK` `50`, `VW_MATERIAL_RISK` `26`, `VW_HIDDEN_DEPENDENCIES` `26`, EMBEDDING = `ARRAY`
 
 **Check it yourself (1 min)**
-- [ ] **Database Explorer > DEMO_19865_DB > GNN_SUPPLY_CHAIN_RISK > Views > VW_SUPPLIER_RISK** > **Data Preview**.
+- [ ] **Catalog > DEMO_19865_DB > GNN_SUPPLY_CHAIN_RISK > Views (4) > VW_SUPPLIER_RISK**, then its data preview tab.
 - [ ] Sort the **GNN_RISK_SCORE** column high to low: the top 2 rows are **Albemarle Corp** and **Epsilon Tech**,
   `COUNTRY_CODE` **AUS**, `RISK_CATEGORY` **CRITICAL**.
 - [ ] Not right? If the preview is empty, run `04_stage4_demo_data.sql` again.
@@ -379,11 +388,11 @@ Builds the contract search index and the semantic view. 1-6 minutes, because it 
 If the search row says **WAIT**, wait a minute and run the file again.
 
 **Check it yourself (1 min)**
-- [ ] **Database Explorer > DEMO_19865_DB > GNN_SUPPLY_CHAIN_RISK**: under **Cortex Search Services** you see
-  `CONTRACT_SEARCH_SERVICE`; open it and its status is **Active**.
-- [ ] Under **Semantic Views** you see `SUPPLY_CHAIN_RISK_SEMANTIC_VIEW`. Open it: it lists 4 tables.
-- [ ] Not right? If the service shows *Building* or *Initializing*, wait 2 minutes and refresh. Otherwise run
-  `05_stage5_search_semantic_view.sql` again.
+- [ ] **Catalog > DEMO_19865_DB > GNN_SUPPLY_CHAIN_RISK**: the tree shows **Cortex search services (1)** with
+  `CONTRACT_SEARCH_SERVICE`, and **Semantic views (1)** with `SUPPLY_CHAIN_RISK_SEMANTIC_VIEW`.
+- [ ] The schema's object list shows both with **Created** a few minutes ago.
+- [ ] Not right? If the search row in the checkpoint said **WAIT**, wait 2 minutes and run
+  `05_stage5_search_semantic_view.sql` again; the script, not the UI, confirms the index is ACTIVE.
 
 ### Step 8 - The agent: `snowsight/06_stage6_agent.sql`
 Creates the Cortex Agent. Under 1 minute.
@@ -475,7 +484,7 @@ Only what this lab created is removed:
 `ALTER ACCOUNT UNSET CORTEX_ENABLED_CROSS_REGION;` as ACCOUNTADMIN (only if nothing else in the account relies on it).
 
 **Check it yourself (1 min)**
-- [ ] **Catalog > Database Explorer** (click refresh): none of the databases in the table above is listed.
+- [ ] **Catalog** (click **Refresh**): searching `DEMO_19865`, `S4_Z` and `TRAINING_KIT_REPO` finds nothing.
 - [ ] **Compute > Warehouses**: `DEMO_19865_WH` is gone.
 - [ ] Click your name > **Switch role**: `DEMO_19865_ROLE` is no longer listed.
 - [ ] The workspace selector no longer offers **gnn_training**.
