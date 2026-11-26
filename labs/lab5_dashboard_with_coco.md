@@ -1,4 +1,4 @@
-# Lab 5 (optional) - Build a supply chain risk dashboard with one prompt
+# Lab 5 - Build a supply chain risk dashboard with one prompt
 
 > [!CAUTION]
 > **Disclaimer:** all data in this lab is **synthetic and for demonstration only**. Company names (for example
