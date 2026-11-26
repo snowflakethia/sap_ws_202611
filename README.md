@@ -1,6 +1,6 @@
 # Find the supplier risk your ERP can't see
 
-### SAP data + a graph neural network + a Cortex Agent, on Snowflake, in about 30 minutes
+### SAP data + a graph neural network + a Cortex Agent, on Snowflake: set up in about 30 minutes, labs from 75 minutes
 
 > [!CAUTION]
 > **Disclaimer: synthetic data, for demonstration only.** Every record in this lab (SAP vendors, materials,
@@ -28,14 +28,15 @@ In this hands-on lab you'll:
 The agent writes the SQL against your SAP data, searches the contract documents, and combines the two into
 one answer you can trace back to every query and every passage it used.
 
-**Why it's worth an hour of your time:**
+**Why it's worth your time:**
 - **It's the SAP Business Data Cloud (BDC) + Snowflake pattern, end to end.** SAP data used *in place*,
   enriched with non-SAP data and AI, with a path for the results to flow back to SAP.
 - **It's real AI, not a slide.** Graph ML finds relationships that aren't in any table. Cortex Search
   reads unstructured contracts. A semantic view gives the agent trusted business definitions.
 - **It's yours to keep.** Everything runs in your own Snowflake account, built from this repo, and you
   can remove it with one script.
-- **You only need a browser.** No installs, no CLI, no GitHub account. Even a Snowflake trial account works.
+- **You only need a browser.** No installs, no CLI, no GitHub account. Even a Snowflake trial account works
+  (all labs except the optional Lab 4, which needs a non-trial account).
 
 **Contents:** [Business value](#the-business-value-system-of-record--system-of-context) ·
 [What you'll build](#what-youll-build) · [Real vs simulated](#sap-business-data-cloud-whats-real-and-whats-simulated) ·
@@ -142,8 +143,14 @@ Things to remember during the labs:
 ## Setup (browser only, about 30 minutes)
 
 **You need:**
-- a Snowflake account where you can use the **ACCOUNTADMIN** role (a new or trial account is fine);
+- a Snowflake account where you can use the **ACCOUNTADMIN** role. Use a **new, trial or sandbox account**, not a
+  production one: the setup creates account-level objects and changes one account setting (see below);
 - a region with Cortex AI.
+
+> [!IMPORTANT]
+> **One account-wide setting changes.** Step 3 sets `CORTEX_ENABLED_CROSS_REGION = 'ANY_REGION'`, so Cortex AI
+> requests may be processed in another Snowflake region. This applies to the **whole account**, not just this lab,
+> and [Clean up](#clean-up) leaves it in place. If your organisation has data-residency rules, check before you start.
 
 You **don't** need a GitHub account, Git, or any downloads. Snowflake reads this course straight from GitHub:
 
@@ -171,7 +178,7 @@ You **don't** need a GitHub account, Git, or any downloads. Snowflake reads this
 
 ### Before you start
 - Sign in to your Snowflake account in Snowsight.
-- Set your role to **ACCOUNTADMIN**: bottom-left, click your name (for example **ALPHATHIA**) > **Switch role** > **ACCOUNTADMIN**.
+- Set your role to **ACCOUNTADMIN**: bottom-left, click your name > **Switch role** > **ACCOUNTADMIN**.
 
 > **Why the role matters:** Snowsight uses the role in your **user menu** (bottom-left) to decide what you can
 > see in dialogs such as *Create Git workspace*. If that role isn't ACCOUNTADMIN, the dialog says
@@ -232,6 +239,11 @@ The only step where you copy code by hand. **Don't create a new workspace for th
 | `Repository ... not found` / `403` | Check your internet access; don't change the code |
 | Only part of the code ran | You selected some lines before running. Click inside the editor, then use **Run All** |
 
+**Check it yourself (1 min)**
+- [ ] Left navigation > **Catalog** > **Database Explorer**: the database `TRAINING_KIT_REPO` is listed.
+- [ ] Expand **TRAINING_KIT_REPO > PUBLIC > Git Repositories**: you see `GNN_KIT`.
+- [ ] Not right? Return to Workspaces > My Workspace > `bootstrap.sql` and **Run All** again as ACCOUNTADMIN.
+
 ### Step 2 - Create your Git workspace (the only new workspace you create)
 
 This gives you every course file inside Snowsight, so you never copy code again.
@@ -263,6 +275,11 @@ This gives you every course file inside Snowsight, so you never copy code again.
 | I created a *Private* or *Shared* workspace by mistake | Harmless. Ignore it, or delete it from the workspace selector's **...** menu, then do Step 2 again with **Git workspace** |
 | I can't find the small **+** | Hover just right of the *Workspaces / Databases* tabs at the top of the file panel. If the panel is collapsed, click **Workspaces** in the left navigation first |
 | No **Git workspace** option | Your account uses the older Worksheets UI. Use **Catalog > Database Explorer > TRAINING_KIT_REPO > PUBLIC > Git Repositories > GNN_KIT**, find each file and choose **Copy into worksheet** |
+
+**Check it yourself (1 min)**
+- [ ] Click `README.md` in **gnn_training**: its first line reads *Find the supplier risk your ERP can't see*.
+- [ ] Open the `snowsight` folder: you see files `00_bootstrap.sql` to `08_readiness_check.sql`, plus `99_remove_setup.sql`.
+- [ ] Not right? You are probably in **My Workspace**. Switch the selector to **gnn_training**.
 
 You can delete `bootstrap.sql` from **My Workspace** now. You don't need it again.
 
@@ -298,6 +315,12 @@ inference** so CoCo, Cortex Agents and Cortex Analyst can route to a region with
 | S1-D Cortex cross-region inference (CoCo, agents) | `ANY_REGION` | PASS |
 | S1-E PyPI mirror access for Streamlit (Lab 5) | `1` | PASS |
 
+**Check it yourself (1 min)**
+- [ ] Left navigation > **Compute** > **Warehouses**: `DEMO_19865_WH` is listed, size **Small**.
+- [ ] Bottom-left, click your name > **Switch role**: `DEMO_19865_ROLE` is in the list. (Don't switch to it; stay on ACCOUNTADMIN.)
+- [ ] **Catalog > Database Explorer**: `DEMO_19865_DB` is listed.
+- [ ] Not right? Refresh the browser page (lists can be cached), then run `01_stage1_account.sql` again.
+
 ### Step 4 - SAP data products: `snowsight/02_stage2_sap_data.sql`
 Creates the 4 SAP data product databases and loads them. About 1 minute.
 
@@ -305,6 +328,12 @@ Creates the 4 SAP data product databases and loads them. About 1 minute.
 - `S2-A 4 SAP snapshot databases, kind STANDARD` = `4/4`
 - Rows: vendors `50`, materials `26`, purchase_orders `120`, billofmaterials `23`, TOTAL `219`
 - `S2-C vendor columns populated` = `50/50/50/50`
+
+**Check it yourself (1 min)**
+- [ ] **Catalog > Database Explorer**: 4 databases whose names start with `S4_Z` are listed.
+- [ ] Open **S4_ZVENDORINFO_DP_DELTA_SHARING_V1 > s4_zvendorinfo_dp_srv:v1 > Tables > s4custom_vendors** > **Data Preview**:
+  vendor IDs look like `V10001`, and names such as **BHP Copper** appear.
+- [ ] Not right? Run `02_stage2_sap_data.sql` again; it reloads the data from scratch.
 
 ### Step 5 - Demo schema: `snowsight/03_stage3_demo_schema.sql`
 Creates the demo tables, views and stages. Under 1 minute.
@@ -316,6 +345,12 @@ Creates the demo tables, views and stages. Under 1 minute.
 - stages + file format `3 + 1`
 - `DEMO_SECRETS_STAGE is empty` = `0`
 
+**Check it yourself (1 min)**
+- [ ] **Catalog > Database Explorer > DEMO_19865_DB > GNN_SUPPLY_CHAIN_RISK**: **Tables** shows 6 (`BOTTLENECKS_PREDICTIONS`,
+  `CUSTOMER_CONTRACTS`, `REGIONS_EXTERNAL`, `RISK_SCORES_PREDICTIONS`, `SUPPLIER_LINKS_PREDICTIONS`, `TRADE_DATA_EXTERNAL`).
+- [ ] **Views** shows 4, each starting with `VW_`.
+- [ ] Not right? Click the refresh icon in Database Explorer, then run `03_stage3_demo_schema.sql` again.
+
 ### Step 6 - Demo data: `snowsight/04_stage4_demo_data.sql`
 Loads the trade data, contracts and precomputed GNN results. About 1 minute.
 
@@ -324,6 +359,12 @@ Loads the trade data, contracts and precomputed GNN results. About 1 minute.
   TRADE `150`, TOTAL `648`
 - `VW_RISK_SUMMARY SUPPLIERS` = `50/2/4/0.4060`, `PARTS` = `26/0/0/0.4768`
 - `VW_SUPPLIER_RISK` `50`, `VW_MATERIAL_RISK` `26`, `VW_HIDDEN_DEPENDENCIES` `26`, EMBEDDING = `ARRAY`
+
+**Check it yourself (1 min)**
+- [ ] **Database Explorer > DEMO_19865_DB > GNN_SUPPLY_CHAIN_RISK > Views > VW_SUPPLIER_RISK** > **Data Preview**.
+- [ ] Sort the **GNN_RISK_SCORE** column high to low: the top 2 rows are **Albemarle Corp** and **Epsilon Tech**,
+  `COUNTRY_CODE` **AUS**, `RISK_CATEGORY` **CRITICAL**.
+- [ ] Not right? If the preview is empty, run `04_stage4_demo_data.sql` again.
 
 ### Step 7 - Search and semantic view: `snowsight/05_stage5_search_semantic_view.sql`
 Builds the contract search index and the semantic view. 1-6 minutes, because it waits for the index.
@@ -336,6 +377,13 @@ Builds the contract search index and the semantic view. 1-6 minutes, because it 
 - Semantic view query = `50 rows: CRITICAL 2, HIGH 4, MEDIUM 44`
 
 If the search row says **WAIT**, wait a minute and run the file again.
+
+**Check it yourself (1 min)**
+- [ ] **Database Explorer > DEMO_19865_DB > GNN_SUPPLY_CHAIN_RISK**: under **Cortex Search Services** you see
+  `CONTRACT_SEARCH_SERVICE`; open it and its status is **Active**.
+- [ ] Under **Semantic Views** you see `SUPPLY_CHAIN_RISK_SEMANTIC_VIEW`. Open it: it lists 4 tables.
+- [ ] Not right? If the service shows *Building* or *Initializing*, wait 2 minutes and refresh. Otherwise run
+  `05_stage5_search_semantic_view.sql` again.
 
 ### Step 8 - The agent: `snowsight/06_stage6_agent.sql`
 Creates the Cortex Agent. Under 1 minute.
@@ -351,6 +399,15 @@ Creates the Cortex Agent. Under 1 minute.
 2. Ask: **Which suppliers are CRITICAL risk?**
 3. You should see **Albemarle Corp** and **Epsilon Tech** (both AUS, GNN risk score about 0.61).
 
+**Check it yourself (1 min)**
+- [ ] The answer names **exactly** those 2 suppliers, not a different list and not "I don't have access".
+- [ ] Expand the answer's details (the thinking/tool steps above it): the agent used the
+  `supply_chain_risk_analyst` tool, and you can see the SQL it ran.
+- [ ] Ask **What do their contracts say about force majeure?**: the answer quotes contract text, using the
+  `contract_search` tool.
+- [ ] Not right? Check your **user-menu** role is ACCOUNTADMIN, start a new chat, and ask again. If it still fails,
+  run `06_stage6_agent.sql` again.
+
 ### Step 9 - Am I ready? `snowsight/08_readiness_check.sql`
 Read-only; you can run it at any time.
 
@@ -361,6 +418,11 @@ Read-only; you can run it at any time.
 
 If it says **NOT READY**, look at the first FAIL row and run the file named in its **FIX** column.
 Then run Step 9 again.
+
+**Check it yourself (1 min)**
+- [ ] Every box in Steps 1-8 above is ticked.
+- [ ] Take a screenshot of the Step 9 result (the `OVERALL | READY` row visible) and keep it. Your trainer may ask for it.
+- [ ] Not right? A ticked box doesn't match the script result? Tell your trainer which step and what you saw.
 
 **You're ready. Start with [Lab 1](labs/lab1_explore_data.md).**
 
@@ -400,7 +462,26 @@ When the course is over:
 2. Delete the workspace: **Workspaces** (left navigation), open the workspace selector, click **...** next to
    **gnn_training** > **Delete**.
 
-Only what this lab created is removed.
+Only what this lab created is removed:
+
+| Removed | Objects |
+| --- | --- |
+| Databases | `DEMO_19865_DB`, `DEMO_SHARED_WORKSPACES`, the 4 `S4_Z*_DP_DELTA_SHARING_V1` databases, `TRAINING_KIT_REPO` |
+| Compute | Warehouse `DEMO_19865_WH`, compute pool `DEMO_19865_POOL` |
+| Roles | `DEMO_19865_ROLE`, `DEMO_READER_ROLE` |
+| Integrations | `GNN_KIT_GITHUB`, `DEMO_19865_PIP_INSTALLATION` |
+
+**Kept:** the account setting `CORTEX_ENABLED_CROSS_REGION = 'ANY_REGION'` from Step 3. To undo it, run
+`ALTER ACCOUNT UNSET CORTEX_ENABLED_CROSS_REGION;` as ACCOUNTADMIN (only if nothing else in the account relies on it).
+
+**Check it yourself (1 min)**
+- [ ] **Catalog > Database Explorer** (click refresh): none of the databases in the table above is listed.
+- [ ] **Compute > Warehouses**: `DEMO_19865_WH` is gone.
+- [ ] Click your name > **Switch role**: `DEMO_19865_ROLE` is no longer listed.
+- [ ] The workspace selector no longer offers **gnn_training**.
+- [ ] Not right? Run `99_remove_setup.sql` again. If you already deleted the workspace, open
+  `https://raw.githubusercontent.com/snowflakethia/sap_ws_202611/main/snowsight/99_remove_setup.sql` and paste it
+  into a new SQL file in **My Workspace**, as in Step 1.
 
 ---
 

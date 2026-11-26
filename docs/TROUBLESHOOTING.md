@@ -23,6 +23,26 @@
 | Compute pool creation fails | 1 | SPCS is not available in the account or region | Only Lab 4 needs the pool. Remove the pool statements from `11_warehouse_compute_pool.sql`; everything else still works |
 | `Permission denied` running `./scripts/deploy.sh` | - | The script isn't marked executable | Run it as `bash scripts/deploy.sh ...` |
 
+## When a "Check it yourself" box doesn't match
+
+The README's **Check it yourself** blocks ask you to confirm each step in the Snowsight UI. If a script says PASS
+but the UI check fails, the UI is usually showing an old view or the wrong context. Work down this table.
+
+| README step | What you saw | Likely cause | Fix |
+| --- | --- | --- | --- |
+| Any | An object is missing in Database Explorer or Warehouses | The list is cached | Click the refresh icon, or reload the browser page |
+| Any | Objects are missing even after a refresh | Your **user-menu** role (bottom-left) isn't ACCOUNTADMIN, so Snowsight hides them | Click your name > **Switch role** > **ACCOUNTADMIN** |
+| 1 | `TRAINING_KIT_REPO` has no `GNN_KIT` repository | Only part of `bootstrap.sql` ran | Open `bootstrap.sql` again, click inside the editor, **Run All** |
+| 2 | `README.md` or the `snowsight` folder isn't there | You are in **My Workspace**, or created a Private/Shared workspace | Switch the selector to **gnn_training**; if it doesn't exist, redo Step 2 with **Git workspace** |
+| 3 | `DEMO_19865_ROLE` isn't in the **Switch role** list | The role exists but isn't granted to your user | Re-run `01_stage1_account.sql`; it grants the role to the current user |
+| 4 | Fewer than 4 `S4_Z*` databases, or `s4custom_vendors` is empty | Step 4 stopped part-way | Re-run `02_stage2_sap_data.sql`; it truncates and reloads |
+| 5 | Fewer than 6 tables or 4 views | Step 4 hadn't finished, so the views couldn't compile | Re-run Step 4, then Step 5 |
+| 6 | Albemarle Corp and Epsilon Tech aren't the top 2 by `GNN_RISK_SCORE` | Old or partial GNN results (for example after Lab 4 retraining) | Re-run `04_stage4_demo_data.sql` to restore the reference results |
+| 7 | `CONTRACT_SEARCH_SERVICE` isn't **Active** | The index is still building | Wait 2 minutes and refresh. If it stays inactive, see the change-tracking row above |
+| 8 | The agent answers "no access", or names other suppliers | Wrong user-menu role, or an old chat session | Switch to ACCOUNTADMIN, start a **new** chat, ask again; then re-run `06_stage6_agent.sql` |
+| 8 | No tool steps or SQL shown under the answer | The details panel is collapsed | Click the thinking/steps section above the answer to expand it |
+| Clean up | Objects still listed after `99_remove_setup.sql` | Cached list, or the script hit an error part-way | Refresh; if still there, re-run `99_remove_setup.sql` and check the first error |
+
 ## Getting help
 
 1. Run `bash scripts/validate.sh -c <conn> --stage all` and save the output.
