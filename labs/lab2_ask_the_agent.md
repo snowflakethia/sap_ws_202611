@@ -100,6 +100,30 @@ generation* (RAG). The trace shows you exactly which passages those were.
    > The *Snowflake CoWork* app only lists agents that have been added to it, and this one hasn't (the column
    > says *No*), so use Agent Studio for these labs.
 
+### Warm up: talk to the agent (5 minutes)
+Before you look under the hood, get a feel for the agent. Ask a few of these in the Preview box, in any order,
+and follow up in your own words ("why?", "show that as a table", "only the Australian ones"). There's nothing to
+check yet: just notice **how it answers**: numbers, contract quotes, or both.
+
+| Ask | What it explores | What you should notice |
+| --- | --- | --- |
+| *Give me a one-paragraph summary of our supply chain risk.* | The big picture | It leads with the headline: 2 CRITICAL suppliers, both in Australia |
+| *How many suppliers are in each risk category?* | A simple count | CRITICAL **2**, HIGH **4**, MEDIUM **44** (50 SAP vendors in total) |
+| *Why are our highest-risk suppliers concentrated in one country?* | Regional risk behind the scores | It points to **AUS** and the region's risk factors |
+| *How much do we spend with HIGH or CRITICAL risk suppliers?* | Risk joined to SAP purchase orders | Roughly **$18.6M** of the **$143.3M** total spend |
+| *What are the biggest single points of failure in our supply chain?* | The GNN's predicted bottlenecks | Hidden Tier 2 suppliers that many of your suppliers depend on |
+| *What do our supplier contracts say about termination?* | Contract search only | Quotes from contract text, with contract IDs (`SC-2023-...`) |
+| *If Jiangxi Graphite Ltd stopped shipping, which of our suppliers would be affected?* | A "what if" over predicted links | Tier 1 suppliers such as **BYD Battery** and **SK On** |
+
+> **Tips for experimenting**
+> - Click **New thread** when you change topic, so earlier answers don't steer the next one.
+> - Try asking the same thing two ways. The wording of the answer changes; the **facts** should not.
+> - Ask something the data can't answer, for example *"What will lithium prices be next year?"*. A well-instructed
+>   agent says it doesn't have that data instead of guessing.
+> - Answers take 10-45 seconds. Questions that need both numbers and contracts take longest.
+
+When you've tried a few, move on: Step 2 shows you **how** the agent got each answer.
+
 ## Step 2 - Open the traces (this is where you see the SQL)
 The answer in the chat shows *what* the agent concluded. The traces show *how* it got there. Above the
 conversation, on the right, is a toolbar: **New thread | Show Traces | Show inspector | Preview in Snowflake CoWork**.
